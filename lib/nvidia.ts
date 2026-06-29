@@ -1,7 +1,7 @@
 import OpenAI from 'openai'
 
 const nim = new OpenAI({
-  apiKey: process.env.NVIDIA_NIM_API_KEY!,
+  apiKey: process.env.NVIDIA_NIM_API_KEY || 'dummy_key',
   baseURL: 'https://integrate.api.nvidia.com/v1',
 })
 
