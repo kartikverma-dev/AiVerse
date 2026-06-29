@@ -2,7 +2,7 @@ import Nav from '@/components/ui/Nav'
 import { getEvolutionChain, getConcepts } from '@/lib/db'
 import Link from 'next/link'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 const statusColor: Record<string, string> = {
   emerging: '#818cf8', growing: '#4ade80',

@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import Nav from '@/components/ui/Nav'
 import ConceptsClient from './ConceptsClient'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 export default function ConceptsPage() {
   return (

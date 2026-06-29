@@ -3,7 +3,7 @@ import Nav from '@/components/ui/Nav'
 import { getConceptBySlug, getConcepts } from '@/lib/db'
 import Link from 'next/link'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 const statusEmoji: Record<string, string> = {
   emerging: '🌱', growing: '📈', stable: '✅', declining: '📉', historical: '📦'

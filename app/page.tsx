@@ -1,177 +1,598 @@
-'use client'
 import Link from 'next/link'
 import Nav from '@/components/ui/Nav'
+import { getConcepts, getDigestEntries } from '@/lib/db'
+import InteractiveEvolution from '@/components/public/InteractiveEvolution'
+import ConceptCard from '@/components/public/ConceptCard'
 
-const features = [
-  { icon: '📚', title: 'Concept Library', desc: 'Every AI term with TL;DR, technical depth, beginner explanation, sources, and status.', href: '/concepts' },
-  { icon: '🔗', title: 'Evolution Timeline', desc: 'See how ideas are born from others — Prompt Engineering → CoT → Context Engineering.', href: '/timeline' },
-  { icon: '🕸️', title: 'Relationship Graph', desc: 'Interactive force graph connecting all concepts. Filter by status, category, or difficulty.', href: '/graph' },
-  { icon: '📡', title: 'Relevance Tracker', desc: 'Evidence-based status: GitHub activity, paper mentions, community volume — updated weekly.', href: '/concepts' },
-  { icon: '🏆', title: 'Source Hierarchy', desc: 'Every claim is cited. Ranked from official AI lab blogs down to community discussion.', href: '/concepts' },
-  { icon: '📬', title: 'Weekly Digest', desc: 'New concepts, status changes, notable papers — one curated page every week.', href: '/digest' },
-]
+export const revalidate = 60
 
-const statuses = [
-  { label: '🌱 Emerging', desc: 'New, gaining traction', color: '#818cf8' },
-  { label: '📈 Growing', desc: 'Rapid adoption', color: '#4ade80' },
-  { label: '✅ Stable', desc: 'Mainstream, well-understood', color: '#60a5fa' },
-  { label: '📉 Declining', desc: 'Being superseded', color: '#fbbf24' },
-  { label: '📦 Historical', desc: 'Foundational context', color: '#71717a' },
-]
+const statusColor: Record<string, string> = {
+  emerging: '#818cf8',
+  growing: '#4ade80',
+  stable: '#60a5fa',
+  declining: '#fbbf24',
+  historical: '#71717a',
+}
 
-export default function Home() {
+const statusEmoji: Record<string, string> = {
+  emerging: '🌱',
+  growing: '📈',
+  stable: '✅',
+  declining: '📉',
+  historical: '📦',
+}
+
+export default async function Home() {
+  const allConcepts = await getConcepts({ approved: true })
+  const latestDigests = await getDigestEntries()
+
+  // Calculate statistics
+  const totalCount = allConcepts.length
+  const statusCounts = allConcepts.reduce((acc, c) => {
+    acc[c.status] = (acc[c.status] || 0) + 1
+    return acc
+  }, {} as Record<string, number>)
+
+  // Get 3 latest concepts for display
+  const latestConcepts = allConcepts.slice(0, 3)
+
+  // Get 4 latest digest items
+  const recentDigestItems = latestDigests.slice(0, 4)
+
   return (
     <>
       <Nav />
-      <main style={{ paddingTop: '56px' }}>
-        {/* Hero */}
-        <section style={{
-          minHeight: '90vh', display: 'flex', flexDirection: 'column',
-          alignItems: 'center', justifyContent: 'center',
-          textAlign: 'center', padding: '80px 24px',
-          background: 'radial-gradient(ellipse 80% 60% at 50% -10%, rgba(99,102,241,0.12), transparent)',
-        }}>
-          <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: '8px',
-            background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.25)',
-            borderRadius: '20px', padding: '5px 14px', marginBottom: '32px',
-            fontSize: '12px', color: '#818cf8', fontWeight: 500,
-          }}>
-            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#818cf8', display: 'inline-block', animation: 'pulse 2s infinite' }}></span>
-            15 concepts live · Updated weekly
+      <main className="homepage-container">
+        {/* Glow Effects */}
+        <div className="glow-orb main-orb" />
+        <div className="glow-orb secondary-orb" />
+
+        {/* Hero Section */}
+        <section className="hero-section">
+          <div className="badge-wrapper">
+            <span className="live-dot" />
+            <span className="badge-text">{totalCount} AI Concepts Monitored · Updated Weekly</span>
           </div>
 
-          <h1 style={{
-            fontSize: 'clamp(36px, 6vw, 72px)', fontWeight: 700,
-            lineHeight: 1.1, letterSpacing: '-0.03em',
-            maxWidth: '800px', marginBottom: '24px',
-            color: 'var(--text)',
-          }}>
-            Don't chase headlines.<br />
-            <span style={{ color: 'var(--accent)' }}>Track the evolution</span> of ideas.
+          <h1 className="hero-headline">
+            Don't just keep up with AI.<br />
+            <span className="gradient-text">Understand how it evolves.</span>
           </h1>
 
-          <p style={{
-            fontSize: 'clamp(16px, 2vw, 20px)', color: 'var(--text-2)',
-            maxWidth: '560px', marginBottom: '40px', lineHeight: 1.6,
-          }}>
-            A living knowledge graph for the AI ecosystem — tracking not just what terms mean,
-            but how they were born, evolved, and whether they're worth your attention today.
+          <p className="hero-subheadline">
+            A living knowledge graph mapping the lineage, technical depth, and real-world relevance of AI terms as they emerge.
           </p>
 
-          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <Link href="/concepts" style={{
-              padding: '12px 28px', background: 'var(--accent)', color: '#fff',
-              borderRadius: 'var(--radius)', fontWeight: 600, fontSize: '15px',
-              border: 'none', cursor: 'pointer',
-            }}>Explore concepts</Link>
-            <Link href="/graph" style={{
-              padding: '12px 28px', background: 'transparent', color: 'var(--text)',
-              borderRadius: 'var(--radius)', fontWeight: 500, fontSize: '15px',
-              border: '1px solid var(--border-strong)',
-            }}>View knowledge graph</Link>
-          </div>
-
-          {/* Evolution preview */}
-          <div style={{
-            marginTop: '72px', display: 'flex', alignItems: 'center', gap: '0',
-            flexWrap: 'wrap', justifyContent: 'center', maxWidth: '700px',
-          }}>
-            {['Prompt Engineering', 'Chain-of-Thought', 'Context Engineering', 'Loop Engineering'].map((t, i) => (
-              <div key={t} style={{ display: 'flex', alignItems: 'center' }}>
-                <div style={{
-                  padding: '7px 14px', borderRadius: '20px',
-                  background: i === 3 ? 'rgba(99,102,241,0.15)' : 'var(--bg-3)',
-                  border: `1px solid ${i === 3 ? 'rgba(99,102,241,0.3)' : 'var(--border)'}`,
-                  fontSize: '13px', color: i === 3 ? '#818cf8' : 'var(--text-2)',
-                  fontWeight: i === 3 ? 600 : 400,
-                  whiteSpace: 'nowrap',
-                }}>{t}</div>
-                {i < 3 && <div style={{ color: 'var(--text-3)', padding: '0 6px', fontSize: '16px' }}>→</div>}
-              </div>
-            ))}
-          </div>
-          <p style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '12px' }}>
-            Every concept shows its full lineage
-          </p>
-        </section>
-
-        {/* Status system */}
-        <section style={{ padding: '80px 24px', maxWidth: '1100px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-            <h2 style={{ fontSize: '28px', fontWeight: 700, marginBottom: '12px' }}>Evidence-based relevance</h2>
-            <p style={{ color: 'var(--text-2)', maxWidth: '480px', margin: '0 auto' }}>
-              Not editorial opinion — status is determined by GitHub activity, paper mentions, and community volume.
-            </p>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
-            {statuses.map(s => (
-              <div key={s.label} style={{
-                background: 'var(--bg-2)', border: '1px solid var(--border)',
-                borderRadius: '12px', padding: '20px',
-              }}>
-                <div style={{ fontSize: '20px', marginBottom: '8px' }}>{s.label}</div>
-                <div style={{ fontSize: '13px', color: 'var(--text-2)' }}>{s.desc}</div>
-              </div>
-            ))}
+          <div className="hero-ctas">
+            <Link href="/concepts" className="primary-cta">
+              Explore Concept Library
+            </Link>
+            <Link href="/graph" className="secondary-cta">
+              Interactive Force Graph
+            </Link>
           </div>
         </section>
 
-        {/* Features */}
-        <section style={{
-          padding: '80px 24px', maxWidth: '1100px', margin: '0 auto',
-          borderTop: '1px solid var(--border)',
-        }}>
-          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-            <h2 style={{ fontSize: '28px', fontWeight: 700, marginBottom: '12px' }}>8 interconnected features</h2>
-            <p style={{ color: 'var(--text-2)' }}>Signal over noise. Every feature serves one goal.</p>
+        {/* Interactive Lineage Sandbox */}
+        <section className="sandbox-section">
+          <div className="section-header">
+            <div className="pill-indicator">Sandbox</div>
+            <h2>Interactive Lineage Explorer</h2>
+            <p>Click on any node in the evolution pathways below to trace how ideas build on top of each other.</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
-            {features.map(f => (
-              <Link key={f.title} href={f.href}>
-                <div style={{
-                  background: 'var(--bg-2)', border: '1px solid var(--border)',
-                  borderRadius: '12px', padding: '24px', cursor: 'pointer',
-                  transition: 'border-color 0.15s',
-                }}
-                  onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--border-strong)'}
-                  onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--border)'}
-                >
-                  <div style={{ fontSize: '28px', marginBottom: '12px' }}>{f.icon}</div>
-                  <div style={{ fontWeight: 600, marginBottom: '8px' }}>{f.title}</div>
-                  <div style={{ fontSize: '13px', color: 'var(--text-2)', lineHeight: 1.5 }}>{f.desc}</div>
+          <InteractiveEvolution concepts={allConcepts} />
+        </section>
+
+        {/* Dynamic Activity Feed & Latest Additions */}
+        <section className="dashboard-grid-section">
+          <div className="grid-container">
+            {/* Column 1: Recently Added concepts */}
+            <div className="grid-column">
+              <div className="column-header">
+                <div className="column-title">
+                  <span className="header-icon">✨</span>
+                  <h3>Recently Added Concepts</h3>
                 </div>
-              </Link>
+                <Link href="/concepts" className="see-all-link">See all →</Link>
+              </div>
+              <div className="latest-concepts-list">
+                {latestConcepts.map(c => (
+                  <ConceptCard key={c.id} concept={c} />
+                ))}
+              </div>
+            </div>
+
+            {/* Column 2: Weekly Digest Feed */}
+            <div className="grid-column">
+              <div className="column-header">
+                <div className="column-title">
+                  <span className="header-icon">📡</span>
+                  <h3>AI Ecosystem Activity Feed</h3>
+                </div>
+                <Link href="/digest" className="see-all-link">See all digests →</Link>
+              </div>
+              <div className="digest-feed-card">
+                {recentDigestItems.length > 0 ? (
+                  <div className="feed-timeline">
+                    {recentDigestItems.map((item, idx) => (
+                      <div key={item.id || idx} className="feed-item">
+                        <div className="feed-item-marker">
+                          <div className="marker-dot" />
+                          {idx < recentDigestItems.length - 1 && <div className="marker-line" />}
+                        </div>
+                        <div className="feed-item-content">
+                          <div className="feed-item-header">
+                            <span className="feed-item-date">{item.week_of}</span>
+                            <span className="feed-item-type">{item.entry_type.replace('_', ' ')}</span>
+                          </div>
+                          <p className="feed-item-summary">{item.summary}</p>
+                          {item.concept && (
+                            <Link href={`/concepts/${item.concept.slug}`} className="feed-concept-link">
+                              View {item.concept.name} {statusEmoji[item.concept.status]}
+                            </Link>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="empty-feed-text">No updates recorded this week.</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Status System & Significance */}
+        <section className="status-grid-section">
+          <div className="section-header center">
+            <h2>Relevance Status System</h2>
+            <p>We classify AI concepts by their state of adoption in research and industry deployments.</p>
+          </div>
+          <div className="status-cards-wrapper">
+            {[
+              { status: 'stable', label: 'Stable', desc: 'Mainstream technology. Adopted, verified, and well-integrated into standard stacks.' },
+              { status: 'growing', label: 'Growing', desc: 'Accelerating adoption. Seeing wide application, tooling support, and engineering interest.' },
+              { status: 'emerging', label: 'Emerging', desc: 'Cutting-edge. Just appearing in papers or experimental github repositories.' },
+              { status: 'declining', label: 'Declining', desc: 'Superseded. Foundational, but being replaced by more efficient methods.' },
+            ].map(s => (
+              <div key={s.status} className="status-category-card">
+                <div className="status-card-header">
+                  <span className="status-badge-dot" style={{ background: statusColor[s.status] }} />
+                  <h4>{s.label}</h4>
+                  <span className="status-count">{statusCounts[s.status] || 0} terms</span>
+                </div>
+                <p className="status-card-desc">{s.desc}</p>
+                <Link href={`/concepts?status=${s.status}`} className="status-filter-link">
+                  Explore {s.label} →
+                </Link>
+              </div>
             ))}
           </div>
         </section>
 
-        {/* CTA */}
-        <section style={{
-          padding: '100px 24px', textAlign: 'center',
-          borderTop: '1px solid var(--border)',
-        }}>
-          <h2 style={{ fontSize: '32px', fontWeight: 700, marginBottom: '16px' }}>
-            Built for the people who need signal
-          </h2>
-          <p style={{ color: 'var(--text-2)', marginBottom: '32px', maxWidth: '480px', margin: '0 auto 32px' }}>
-            Developers, researchers, students, and educators who need to understand AI clearly — not just keep up.
-          </p>
-          <Link href="/concepts" style={{
-            padding: '14px 32px', background: 'var(--accent)', color: '#fff',
-            borderRadius: 'var(--radius)', fontWeight: 600, fontSize: '16px',
-            display: 'inline-block',
-          }}>Start exploring →</Link>
-        </section>
-
-        <footer style={{
-          borderTop: '1px solid var(--border)', padding: '24px',
-          textAlign: 'center', color: 'var(--text-3)', fontSize: '13px',
-        }}>
-          AiVerse · Built with Next.js, Supabase, NVIDIA NIM · {new Date().getFullYear()}
+        {/* Footer */}
+        <footer className="home-footer">
+          <div className="footer-content">
+            <span className="footer-logo">AiVerse</span>
+            <p>Mapping the evolution of AI knowledge, patterns, and paradigms.</p>
+            <div className="footer-meta">
+              Built with Next.js, Supabase, NVIDIA NIM · {new Date().getFullYear()}
+            </div>
+          </div>
         </footer>
       </main>
-      <style>{`@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }`}</style>
+
+      <style>{`
+        .homepage-container {
+          position: relative;
+          padding-top: 56px;
+          overflow-x: hidden;
+          background-color: var(--bg);
+          color: var(--text);
+        }
+
+        /* Glow effects */
+        .glow-orb {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(120px);
+          z-index: 0;
+          pointer-events: none;
+          opacity: 0.15;
+        }
+        .main-orb {
+          top: -100px;
+          right: 15%;
+          width: 400px;
+          height: 400px;
+          background: radial-gradient(circle, #6366f1 0%, transparent 80%);
+        }
+        .secondary-orb {
+          top: 600px;
+          left: 5%;
+          width: 350px;
+          height: 350px;
+          background: radial-gradient(circle, #4f46e5 0%, transparent 80%);
+        }
+
+        /* Hero Section */
+        .hero-section {
+          max-width: 900px;
+          margin: 0 auto;
+          padding: 100px 24px 60px;
+          text-align: center;
+          position: relative;
+          z-index: 1;
+        }
+        .badge-wrapper {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: rgba(99, 102, 241, 0.08);
+          border: 1px solid rgba(99, 102, 241, 0.2);
+          border-radius: 20px;
+          padding: 6px 14px;
+          margin-bottom: 28px;
+        }
+        .live-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #818cf8;
+          display: inline-block;
+          animation: pulse 2s infinite;
+        }
+        .badge-text {
+          font-size: 12px;
+          color: #818cf8;
+          font-weight: 600;
+          letter-spacing: 0.02em;
+        }
+        .hero-headline {
+          font-size: clamp(38px, 6vw, 68px);
+          font-weight: 800;
+          line-height: 1.1;
+          letter-spacing: -0.03em;
+          margin-bottom: 24px;
+        }
+        .gradient-text {
+          background: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+        .hero-subheadline {
+          font-size: clamp(16px, 2vw, 19px);
+          line-height: 1.6;
+          color: var(--text-2);
+          max-width: 620px;
+          margin: 0 auto 38px;
+        }
+        .hero-ctas {
+          display: flex;
+          gap: 16px;
+          justify-content: center;
+          flex-wrap: wrap;
+        }
+        .primary-cta {
+          padding: 14px 28px;
+          background: var(--accent);
+          color: white;
+          border-radius: 8px;
+          font-weight: 600;
+          font-size: 15px;
+          text-decoration: none;
+          box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+          transition: transform 0.2s, background 0.2s;
+        }
+        .primary-cta:hover {
+          background: #4f46e5;
+          transform: translateY(-1px);
+        }
+        .secondary-cta {
+          padding: 14px 28px;
+          background: transparent;
+          color: var(--text);
+          border-radius: 8px;
+          font-weight: 500;
+          font-size: 15px;
+          text-decoration: none;
+          border: 1px solid var(--border-strong);
+          transition: background 0.2s, border-color 0.2s;
+        }
+        .secondary-cta:hover {
+          background: var(--bg-2);
+          border-color: var(--text-2);
+        }
+
+        /* Sandbox Section */
+        .sandbox-section {
+          max-width: 1000px;
+          margin: 0 auto;
+          padding: 60px 24px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          position: relative;
+          z-index: 1;
+        }
+        .section-header {
+          text-align: center;
+          margin-bottom: 24px;
+          max-width: 600px;
+        }
+        .section-header.center {
+          margin: 0 auto 40px;
+        }
+        .pill-indicator {
+          display: inline-block;
+          font-size: 11px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          color: #818cf8;
+          background: rgba(129, 140, 248, 0.1);
+          padding: 4px 10px;
+          border-radius: 4px;
+          margin-bottom: 12px;
+        }
+        .section-header h2 {
+          font-size: 28px;
+          font-weight: 700;
+          margin-bottom: 10px;
+        }
+        .section-header p {
+          color: var(--text-2);
+          font-size: 14px;
+          line-height: 1.5;
+        }
+
+        /* Dashboard Grid Section */
+        .dashboard-grid-section {
+          max-width: 1100px;
+          margin: 0 auto;
+          padding: 80px 24px;
+          position: relative;
+          z-index: 1;
+          border-top: 1px solid var(--border);
+        }
+        .grid-container {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 40px;
+        }
+        @media (max-width: 900px) {
+          .grid-container {
+            grid-template-columns: 1fr;
+            gap: 48px;
+          }
+        }
+        .grid-column {
+          display: flex;
+          flex-direction: column;
+        }
+        .column-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 20px;
+          border-bottom: 1px solid var(--border);
+          padding-bottom: 12px;
+        }
+        .column-title {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .header-icon {
+          font-size: 18px;
+        }
+        .column-title h3 {
+          font-size: 16px;
+          font-weight: 700;
+          color: var(--text);
+        }
+        .see-all-link {
+          font-size: 13px;
+          color: #818cf8;
+          text-decoration: none;
+          font-weight: 500;
+        }
+        .see-all-link:hover {
+          text-decoration: underline;
+        }
+        .latest-concepts-list {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        /* Activity Feed Timeline */
+        .digest-feed-card {
+          background: var(--bg-2);
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          padding: 24px;
+          flex: 1;
+        }
+        .feed-timeline {
+          display: flex;
+          flex-direction: column;
+        }
+        .feed-item {
+          display: flex;
+          gap: 16px;
+        }
+        .feed-item-marker {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        .marker-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: #818cf8;
+          margin-top: 6px;
+        }
+        .marker-line {
+          width: 2px;
+          flex: 1;
+          background: var(--border);
+          min-height: 48px;
+          margin: 6px 0;
+        }
+        .feed-item-content {
+          padding-bottom: 24px;
+          flex: 1;
+        }
+        .feed-item-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 6px;
+        }
+        .feed-item-date {
+          font-size: 11px;
+          color: var(--text-3);
+          font-weight: 500;
+        }
+        .feed-item-type {
+          font-size: 10px;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          background: var(--bg-4);
+          border: 1px solid var(--border);
+          color: var(--text-2);
+          padding: 1px 6px;
+          border-radius: 4px;
+          font-weight: 600;
+        }
+        .feed-item-summary {
+          font-size: 13px;
+          line-height: 1.5;
+          color: var(--text-2);
+          margin-bottom: 8px;
+        }
+        .feed-concept-link {
+          display: inline-block;
+          font-size: 12px;
+          color: #818cf8;
+          text-decoration: none;
+          font-weight: 500;
+        }
+        .feed-concept-link:hover {
+          text-decoration: underline;
+        }
+        .empty-feed-text {
+          color: var(--text-3);
+          text-align: center;
+          padding: 40px 0;
+          font-size: 14px;
+        }
+
+        /* Status Grid Section */
+        .status-grid-section {
+          max-width: 1100px;
+          margin: 0 auto;
+          padding: 80px 24px;
+          border-top: 1px solid var(--border);
+          position: relative;
+          z-index: 1;
+        }
+        .status-cards-wrapper {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+          gap: 20px;
+        }
+        .status-category-card {
+          background: var(--bg-2);
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          padding: 24px;
+          display: flex;
+          flex-direction: column;
+          transition: border-color 0.2s, background 0.2s;
+        }
+        .status-category-card:hover {
+          border-color: var(--border-strong);
+          background: var(--bg-3);
+        }
+        .status-card-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 12px;
+        }
+        .status-badge-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+        }
+        .status-card-header h4 {
+          font-size: 15px;
+          font-weight: 700;
+          color: var(--text);
+          flex: 1;
+        }
+        .status-count {
+          font-size: 11px;
+          color: var(--text-3);
+          background: var(--bg-4);
+          padding: 2px 6px;
+          border-radius: 4px;
+          font-weight: 500;
+        }
+        .status-card-desc {
+          font-size: 13px;
+          line-height: 1.5;
+          color: var(--text-2);
+          margin-bottom: 20px;
+          flex: 1;
+        }
+        .status-filter-link {
+          font-size: 13px;
+          color: #818cf8;
+          text-decoration: none;
+          font-weight: 500;
+          margin-top: auto;
+        }
+        .status-filter-link:hover {
+          text-decoration: underline;
+        }
+
+        /* Footer */
+        .home-footer {
+          border-top: 1px solid var(--border);
+          padding: 60px 24px;
+          background: var(--bg-2);
+          text-align: center;
+          position: relative;
+          z-index: 1;
+        }
+        .footer-logo {
+          font-size: 20px;
+          font-weight: 800;
+          letter-spacing: -0.02em;
+          display: block;
+          margin-bottom: 8px;
+          color: var(--text);
+        }
+        .footer-content p {
+          font-size: 13px;
+          color: var(--text-2);
+          margin-bottom: 24px;
+        }
+        .footer-meta {
+          font-size: 12px;
+          color: var(--text-3);
+        }
+
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+        }
+      `}</style>
     </>
   )
 }

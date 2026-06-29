@@ -2,7 +2,7 @@ import Nav from '@/components/ui/Nav'
 import { getDigestEntries } from '@/lib/db'
 import Link from 'next/link'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 const typeLabel: Record<string, { label: string; color: string; bg: string }> = {
   new_concept: { label: 'New concept', color: '#4ade80', bg: 'rgba(34,197,94,0.1)' },
