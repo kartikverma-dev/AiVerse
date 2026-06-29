@@ -5,17 +5,32 @@ import type { NextRequest } from 'next/server'
 const ADMIN_EMAIL = 'kartikverma0804@gmail.com'
 
 export async function middleware(request: NextRequest) {
-  const response = NextResponse.next()
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return new NextResponse(
+      "Configuration Error: Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY in environment variables.",
+      { status: 500 }
+    )
+  }
+
+  let supabaseResponse = NextResponse.next({
+    request,
+  })
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     {
       cookies: {
-        getAll() { return request.cookies.getAll() },
+        getAll() {
+          return request.cookies.getAll()
+        },
         setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
+          supabaseResponse = NextResponse.next({
+            request,
+          })
           cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
+            supabaseResponse.cookies.set(name, value, options)
           )
         },
       },
@@ -38,7 +53,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  return response
+  return supabaseResponse
 }
 
 export const config = {
