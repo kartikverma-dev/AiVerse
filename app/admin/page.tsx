@@ -90,15 +90,8 @@ export default async function AdminDashboard() {
               { href: '/admin/concepts', icon: '◈', title: 'Manage concepts', desc: 'Edit, approve, or delete entries' },
               { href: '/admin/digest', icon: '◉', title: 'Weekly digest', desc: 'Review and send this week\'s update' },
             ].map(a => (
-              <Link key={a.href} href={a.href}>
-                <div style={{
-                  background: 'var(--bg-2)', border: '1px solid var(--border)',
-                  borderRadius: '12px', padding: '20px', cursor: 'pointer',
-                  transition: 'border-color 0.15s',
-                }}
-                  onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--border-strong)'}
-                  onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--border)'}
-                >
+              <Link key={a.href} href={a.href} className="admin-action-card-link">
+                <div className="admin-action-card">
                   <div style={{ fontSize: '22px', marginBottom: '10px' }}>{a.icon}</div>
                   <div style={{ fontWeight: 600, fontSize: '14px', marginBottom: '4px' }}>{a.title}</div>
                   <div style={{ fontSize: '12px', color: 'var(--text-3)' }}>{a.desc}</div>
@@ -126,6 +119,23 @@ export default async function AdminDashboard() {
           </div>
         </div>
       </main>
+      <style>{`
+        .admin-action-card-link {
+          text-decoration: none;
+          color: inherit;
+        }
+        .admin-action-card {
+          background: var(--bg-2);
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          padding: 20px;
+          cursor: pointer;
+          transition: border-color 0.15s;
+        }
+        .admin-action-card:hover {
+          border-color: var(--border-strong);
+        }
+      `}</style>
     </div>
   )
 }

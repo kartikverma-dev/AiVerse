@@ -46,18 +46,11 @@ export default async function TimelinePage() {
 
     return (
       <div key={conceptId} style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-        <Link href={`/concepts/${concept.slug}`}>
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: '10px',
-            background: 'var(--bg-2)', border: `1px solid ${statusColor[concept.status] || 'var(--border)'}22`,
+        <Link href={`/concepts/${concept.slug}`} className="timeline-card-link">
+          <div className="timeline-card" style={{
+            border: `1px solid ${statusColor[concept.status] || 'var(--border)'}22`,
             borderLeft: `3px solid ${statusColor[concept.status] || 'var(--border)'}`,
-            borderRadius: 'var(--radius)', padding: '12px 18px',
-            cursor: 'pointer', minWidth: '240px',
-            transition: 'background 0.15s',
-          }}
-            onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.background = 'var(--bg-3)'}
-            onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.background = 'var(--bg-2)'}
-          >
+          }}>
             <div>
               <div style={{ fontWeight: 600, fontSize: '14px' }}>{concept.name}</div>
               {concept.first_appeared && (
@@ -132,16 +125,8 @@ export default async function TimelinePage() {
                   </h2>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                     {standalone.map(c => (
-                      <Link key={c.id} href={`/concepts/${c.slug}`}>
-                        <div style={{
-                          padding: '8px 16px', borderRadius: '20px',
-                          background: 'var(--bg-2)', border: '1px solid var(--border)',
-                          fontSize: '13px', color: 'var(--text-2)', cursor: 'pointer',
-                          transition: 'border-color 0.15s',
-                        }}
-                          onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--border-strong)'}
-                          onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--border)'}
-                        >{c.name}</div>
+                      <Link key={c.id} href={`/concepts/${c.slug}`} className="standalone-concept-link">
+                        <div className="standalone-concept-badge">{c.name}</div>
                       </Link>
                     ))}
                   </div>
@@ -151,6 +136,39 @@ export default async function TimelinePage() {
           )}
         </div>
       </main>
+      <style>{`
+        .timeline-card-link, .standalone-concept-link {
+          text-decoration: none;
+          color: inherit;
+        }
+        .timeline-card {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          background: var(--bg-2);
+          border-radius: var(--radius);
+          padding: 12px 18px;
+          cursor: pointer;
+          min-width: 240px;
+          transition: background 0.15s;
+        }
+        .timeline-card:hover {
+          background: var(--bg-3);
+        }
+        .standalone-concept-badge {
+          padding: 8px 16px;
+          border-radius: 20px;
+          background: var(--bg-2);
+          border: 1px solid var(--border);
+          font-size: 13px;
+          color: var(--text-2);
+          cursor: pointer;
+          transition: border-color 0.15s;
+        }
+        .standalone-concept-badge:hover {
+          border-color: var(--border-strong);
+        }
+      `}</style>
     </>
   )
 }

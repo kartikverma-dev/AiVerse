@@ -11,21 +11,8 @@ const priorityLabel: Record<string, string> = {
 
 export default function ConceptCard({ concept }: { concept: Concept }) {
   return (
-    <Link href={`/concepts/${concept.slug}`}>
-      <div style={{
-        background: 'var(--bg-2)', border: '1px solid var(--border)',
-        borderRadius: '12px', padding: '20px', cursor: 'pointer',
-        transition: 'border-color 0.15s, background 0.15s',
-      }}
-        onMouseEnter={e => {
-          (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--border-strong)'
-          ;(e.currentTarget as HTMLDivElement).style.background = 'var(--bg-3)'
-        }}
-        onMouseLeave={e => {
-          (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--border)'
-          ;(e.currentTarget as HTMLDivElement).style.background = 'var(--bg-2)'
-        }}
-      >
+    <Link href={`/concepts/${concept.slug}`} className="public-concept-card-link">
+      <div className="public-concept-card">
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', marginBottom: '10px' }}>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
@@ -63,6 +50,24 @@ export default function ConceptCard({ concept }: { concept: Concept }) {
           ))}
         </div>
       </div>
+      <style>{`
+        .public-concept-card-link {
+          text-decoration: none;
+          color: inherit;
+        }
+        .public-concept-card {
+          background: var(--bg-2);
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          padding: 20px;
+          cursor: pointer;
+          transition: border-color 0.15s, background 0.15s;
+        }
+        .public-concept-card:hover {
+          border-color: var(--border-strong);
+          background: var(--bg-3);
+        }
+      `}</style>
     </Link>
   )
 }

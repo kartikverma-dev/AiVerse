@@ -184,16 +184,8 @@ export default async function ConceptPage({ params }: { params: Promise<{ slug: 
               <h2 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '16px' }}>Trusted sources</h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {concept.sources.sort((a, b) => a.authority_rank - b.authority_rank).map(src => (
-                  <a key={src.id} href={src.url} target="_blank" rel="noopener noreferrer">
-                    <div style={{
-                      display: 'flex', alignItems: 'center', gap: '12px',
-                      background: 'var(--bg-2)', border: '1px solid var(--border)',
-                      borderRadius: 'var(--radius)', padding: '12px 16px',
-                      transition: 'border-color 0.15s',
-                    }}
-                      onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--border-strong)'}
-                      onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--border)'}
-                    >
+                  <a key={src.id} href={src.url} target="_blank" rel="noopener noreferrer" className="source-card-link">
+                    <div className="source-card">
                       <div style={{
                         width: '22px', height: '22px', borderRadius: '50%',
                         background: 'var(--bg-4)', border: '1px solid var(--border)',
@@ -222,6 +214,25 @@ export default async function ConceptPage({ params }: { params: Promise<{ slug: 
           }}>← Back to all concepts</Link>
         </div>
       </main>
+      <style>{`
+        .source-card-link {
+          text-decoration: none;
+          color: inherit;
+        }
+        .source-card {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          background: var(--bg-2);
+          border: 1px solid var(--border);
+          border-radius: var(--radius);
+          padding: 12px 16px;
+          transition: border-color 0.15s;
+        }
+        .source-card:hover {
+          border-color: var(--border-strong);
+        }
+      `}</style>
     </>
   )
 }
