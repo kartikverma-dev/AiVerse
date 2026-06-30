@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { supabase } from '@/lib/supabaseClient'
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: '▦', exact: true },
@@ -15,6 +16,11 @@ export default function AdminSidebar() {
 
   const isActive = (href: string, exact?: boolean) =>
     exact ? path === href : path?.startsWith(href)
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut()
+    window.location.href = '/login'
+  }
 
   return (
     <aside style={{
@@ -57,16 +63,26 @@ export default function AdminSidebar() {
       </nav>
 
       {/* Bottom */}
-      <div style={{ padding: '12px 8px', borderTop: '1px solid var(--border)' }}>
+      <div style={{ padding: '12px 8px', borderTop: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
         <Link href="/">
           <div style={{
             display: 'flex', alignItems: 'center', gap: '9px',
             padding: '7px 10px', borderRadius: 'var(--radius)',
-            fontSize: '13px', color: 'var(--text-3)', cursor: 'pointer',
+            fontSize: '13px', color: 'var(--text-2)', cursor: 'pointer',
           }}>
             <span>↗</span> View public site
           </div>
         </Link>
+        <div
+          onClick={handleSignOut}
+          style={{
+            display: 'flex', alignItems: 'center', gap: '9px',
+            padding: '7px 10px', borderRadius: 'var(--radius)',
+            fontSize: '13px', color: '#f87171', cursor: 'pointer',
+          }}
+        >
+          <span>←</span> Sign out
+        </div>
       </div>
     </aside>
   )

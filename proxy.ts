@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server'
 
 const ADMIN_EMAIL = 'kartikverma0804@gmail.com'
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return new NextResponse(
       "Configuration Error: Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY in environment variables.",
