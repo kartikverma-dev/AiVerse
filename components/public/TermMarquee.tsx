@@ -1,5 +1,4 @@
 'use client'
-import { motion } from 'framer-motion'
 
 const ROW_1 = ['Transformer Architecture', 'Chain-of-Thought', 'Model Context Protocol', 'RAG Pipelines', 'Mixture of Experts', 'RLHF']
 const ROW_2 = ['Agentic Loops', 'Constitutional AI', 'Vector Embeddings', 'Prompt Engineering', 'Tool Use', 'Context Windows', 'Vibe Coding']
@@ -8,11 +7,10 @@ function Row({ terms, reverse, speed }: { terms: string[]; reverse?: boolean; sp
   const items = [...terms, ...terms]
 
   return (
-    <div style={{ overflow: 'hidden', width: '100%' }} className="marquee-row">
-      <motion.div
-        animate={{ x: reverse ? ['-50%', '0%'] : ['0%', '-50%'] }}
-        transition={{ duration: speed, repeat: Infinity, ease: 'linear' }}
-        style={{ display: 'flex', gap: '14px', width: 'max-content' }}
+    <div style={{ overflow: 'hidden', width: '100%' }}>
+      <div 
+        className={reverse ? "marquee-track-rtl" : "marquee-track-ltr"}
+        style={{ '--speed': `${speed}s` } as React.CSSProperties}
       >
         {items.map((term, i) => (
           <span key={i} style={{
@@ -26,13 +24,13 @@ function Row({ terms, reverse, speed }: { terms: string[]; reverse?: boolean; sp
           }}>
             <span style={{
               width: '5px', height: '5px', borderRadius: '50%',
-              background: i % 3 === 0 ? '#818cf8' : i % 3 === 1 ? '#34d399' : '#38bdf8',
+              background: i % 3 === 0 ? 'var(--accent)' : i % 3 === 1 ? 'var(--success)' : 'var(--stable)',
               flexShrink: 0,
             }} />
             {term}
           </span>
         ))}
-      </motion.div>
+      </div>
     </div>
   )
 }
@@ -60,13 +58,6 @@ export default function TermMarquee() {
         <Row terms={ROW_1} speed={32} />
         <Row terms={ROW_2} reverse speed={36} />
       </div>
-
-      {/* Respect reduced motion purely via CSS — same DOM on server & client, no hydration mismatch */}
-      <style>{`
-        @media (prefers-reduced-motion: reduce) {
-          .marquee-row > div { animation: none !important; transform: none !important; }
-        }
-      `}</style>
     </section>
   )
 }

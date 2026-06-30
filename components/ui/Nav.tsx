@@ -185,27 +185,6 @@ export default function Nav() {
         </div>
       )}
 
-      <style>{`
-        .nav-control-btn:hover {
-          color: var(--text) !important;
-          background-color: var(--bg-3);
-        }
-        .admin-btn:hover {
-          border-color: var(--text-2) !important;
-          color: var(--text) !important;
-        }
-        .mobile-menu-btn {
-          display: none;
-        }
-        @media (max-width: 768px) {
-          .desktop-nav, .desktop-controls {
-            display: none !important;
-          }
-          .mobile-menu-btn {
-            display: flex !important;
-          }
-        }
-      `}</style>
     </nav>
   )
 }
