@@ -10,8 +10,8 @@ interface Node {
 interface Link { source: string | Node; target: string | Node; relationship_type: string }
 
 const STATUS_COLOR: Record<string, string> = {
-  emerging: '#818cf8', growing: '#4ade80',
-  stable: '#60a5fa', declining: '#fbbf24', historical: '#71717a'
+  emerging: 'var(--emerging)', growing: 'var(--growing)',
+  stable: 'var(--stable)', declining: 'var(--declining)', historical: 'var(--historical)'
 }
 
 export default function GraphClient({ nodes, links }: { nodes: Node[]; links: Link[] }) {
@@ -19,6 +19,8 @@ export default function GraphClient({ nodes, links }: { nodes: Node[]; links: Li
   const [selected, setSelected] = useState<Node | null>(null)
   const [filterStatus, setFilterStatus] = useState('all')
   const [filterCategory, setFilterCategory] = useState('All')
+  const [showControls, setShowControls] = useState(false)
+  const [showLegend, setShowLegend] = useState(false)
 
   const categories = ['All', ...Array.from(new Set(nodes.flatMap(n => n.categories)))]
 
@@ -73,7 +75,7 @@ export default function GraphClient({ nodes, links }: { nodes: Node[]; links: Li
 
     const link = g.append('g').selectAll('line')
       .data(filteredLinks).enter().append('line')
-      .attr('stroke', '#ffffff18').attr('stroke-width', 1.5)
+      .attr('stroke', 'var(--border-strong)').attr('stroke-width', 1.5)
       .attr('marker-end', d => {
         const src = typeof d.source === 'object' ? (d.source as Node).status : 'stable'
         return `url(#arrow-${src})`
@@ -98,13 +100,14 @@ export default function GraphClient({ nodes, links }: { nodes: Node[]; links: Li
 
     node.append('circle')
       .attr('r', 14)
-      .attr('fill', d => `${STATUS_COLOR[d.status] || '#71717a'}22`)
-      .attr('stroke', d => STATUS_COLOR[d.status] || '#71717a')
+      .attr('fill', d => STATUS_COLOR[d.status] || 'var(--text-3)')
+      .attr('fill-opacity', 0.12)
+      .attr('stroke', d => STATUS_COLOR[d.status] || 'var(--text-3)')
       .attr('stroke-width', 1.5)
 
     node.append('text')
       .attr('dy', 26).attr('text-anchor', 'middle')
-      .attr('fill', '#a1a1aa').attr('font-size', '10px')
+      .attr('fill', 'var(--text-2)').attr('font-size', '10px')
       .attr('font-family', '-apple-system, sans-serif')
       .text(d => d.name.length > 20 ? d.name.slice(0, 18) + '…' : d.name)
 
@@ -124,8 +127,24 @@ export default function GraphClient({ nodes, links }: { nodes: Node[]; links: Li
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', background: 'var(--bg)' }}>
+      {/* Mobile Top/Bottom action bar */}
+      <div className="graph-mobile-bar" style={{ display: 'none' }}>
+        <button 
+          className={`graph-mobile-btn ${showControls ? 'active' : ''}`} 
+          onClick={() => { setShowControls(!showControls); setShowLegend(false); }}
+        >
+          Filters ⚙️
+        </button>
+        <button 
+          className={`graph-mobile-btn ${showLegend ? 'active' : ''}`} 
+          onClick={() => { setShowLegend(!showLegend); setShowControls(false); }}
+        >
+          Legend ℹ️
+        </button>
+      </div>
+
       {/* Controls */}
-      <div style={{
+      <div className={`graph-filters-panel ${showControls ? 'mobile-visible' : ''}`} style={{
         position: 'absolute', top: '20px', left: '20px', zIndex: 10,
         background: 'var(--bg-2)', border: '1px solid var(--border)',
         borderRadius: '12px', padding: '16px', minWidth: '200px',
@@ -133,11 +152,11 @@ export default function GraphClient({ nodes, links }: { nodes: Node[]; links: Li
         <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-3)', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Filter by status</div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '16px' }}>
           {statuses.map(s => (
-            <button key={s} onClick={() => setFilterStatus(s)} style={{
+            <button key={s} onClick={() => { setFilterStatus(s); if (window.innerWidth <= 768) setShowControls(false); }} style={{
               padding: '5px 10px', borderRadius: 'var(--radius)', fontSize: '12px',
               textAlign: 'left', cursor: 'pointer', border: 'none',
               background: filterStatus === s ? 'var(--accent-dim)' : 'transparent',
-              color: filterStatus === s ? '#818cf8' : 'var(--text-2)',
+              color: filterStatus === s ? 'var(--accent)' : 'var(--text-2)',
               display: 'flex', alignItems: 'center', gap: '6px',
             }}>
               {s !== 'all' && <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: STATUS_COLOR[s], display: 'inline-block', flexShrink: 0 }}></span>}
@@ -149,18 +168,18 @@ export default function GraphClient({ nodes, links }: { nodes: Node[]; links: Li
         <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-3)', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Category</div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
           {categories.map(c => (
-            <button key={c} onClick={() => setFilterCategory(c)} style={{
+            <button key={c} onClick={() => { setFilterCategory(c); if (window.innerWidth <= 768) setShowControls(false); }} style={{
               padding: '5px 10px', borderRadius: 'var(--radius)', fontSize: '12px',
               textAlign: 'left', cursor: 'pointer', border: 'none',
               background: filterCategory === c ? 'var(--accent-dim)' : 'transparent',
-              color: filterCategory === c ? '#818cf8' : 'var(--text-2)',
+              color: filterCategory === c ? 'var(--accent)' : 'var(--text-2)',
             }}>{c}</button>
           ))}
         </div>
       </div>
 
       {/* Legend */}
-      <div style={{
+      <div className={`graph-legend-panel ${showLegend ? 'mobile-visible' : ''}`} style={{
         position: 'absolute', bottom: '20px', left: '20px', zIndex: 10,
         background: 'var(--bg-2)', border: '1px solid var(--border)',
         borderRadius: '10px', padding: '12px 16px',
@@ -177,7 +196,7 @@ export default function GraphClient({ nodes, links }: { nodes: Node[]; links: Li
 
       {/* Selected node panel */}
       {selected && (
-        <div style={{
+        <div className="graph-selected-panel" style={{
           position: 'absolute', top: '20px', right: '20px', zIndex: 10,
           background: 'var(--bg-2)', border: '1px solid var(--border-strong)',
           borderRadius: '12px', padding: '20px', width: '280px',
@@ -219,6 +238,79 @@ export default function GraphClient({ nodes, links }: { nodes: Node[]; links: Li
       )}
 
       <svg ref={svgRef} style={{ width: '100%', height: '100%' }} />
+
+      <style>{`
+        @media (max-width: 768px) {
+          .graph-filters-panel {
+            display: none;
+            position: fixed !important;
+            top: auto !important;
+            bottom: 76px !important;
+            left: 16px !important;
+            right: 16px !important;
+            width: auto !important;
+            max-height: 50vh !important;
+            overflow-y: auto !important;
+            z-index: 40 !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+          }
+          .graph-legend-panel {
+            display: none;
+            position: fixed !important;
+            top: auto !important;
+            bottom: 76px !important;
+            left: 16px !important;
+            right: 16px !important;
+            width: auto !important;
+            z-index: 40 !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+          }
+          .graph-selected-panel {
+            position: fixed !important;
+            top: auto !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
+            border-radius: 20px 20px 0 0 !important;
+            z-index: 50 !important;
+            box-shadow: 0 -8px 24px rgba(0,0,0,0.25) !important;
+            border-left: none !important;
+            border-right: none !important;
+            border-bottom: none !important;
+          }
+          .graph-filters-panel.mobile-visible, .graph-legend-panel.mobile-visible {
+            display: block !important;
+          }
+          .graph-mobile-bar {
+            display: flex !important;
+            position: fixed !important;
+            bottom: 16px !important;
+            left: 16px !important;
+            right: 16px !important;
+            gap: 8px !important;
+            zIndex: 41 !important;
+          }
+          .graph-mobile-btn {
+            flex: 1 !important;
+            padding: 10px !important;
+            background: var(--bg-2) !important;
+            border: 1px solid var(--border-strong) !important;
+            border-radius: 20px !important;
+            color: var(--text-2) !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            text-align: center !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+          }
+          .graph-mobile-btn.active {
+            background: var(--accent) !important;
+            color: white !important;
+            border-color: var(--accent-2) !important;
+          }
+        }
+      `}</style>
     </div>
   )
 }

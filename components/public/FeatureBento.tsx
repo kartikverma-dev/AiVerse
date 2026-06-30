@@ -17,13 +17,13 @@ function MiniGraph() {
         </radialGradient>
       </defs>
       {[[40,30],[100,20],[160,45],[70,70],[140,80]].map(([x,y], i) => (
-        <circle key={i} cx={x} cy={y} r="3" fill="#818cf8" opacity="0.8" />
+        <circle key={i} cx={x} cy={y} r="3" fill="var(--accent)" opacity="0.8" />
       ))}
-      <line x1="40" y1="30" x2="100" y2="20" stroke="#6366f1" strokeWidth="1" opacity="0.3" />
-      <line x1="100" y1="20" x2="160" y2="45" stroke="#6366f1" strokeWidth="1" opacity="0.3" />
-      <line x1="40" y1="30" x2="70" y2="70" stroke="#6366f1" strokeWidth="1" opacity="0.3" />
-      <line x1="70" y1="70" x2="140" y2="80" stroke="#6366f1" strokeWidth="1" opacity="0.3" />
-      <line x1="160" y1="45" x2="140" y2="80" stroke="#6366f1" strokeWidth="1" opacity="0.3" />
+      <line x1="40" y1="30" x2="100" y2="20" stroke="var(--accent)" strokeWidth="1" opacity="0.3" />
+      <line x1="100" y1="20" x2="160" y2="45" stroke="var(--accent)" strokeWidth="1" opacity="0.3" />
+      <line x1="40" y1="30" x2="70" y2="70" stroke="var(--accent)" strokeWidth="1" opacity="0.3" />
+      <line x1="70" y1="70" x2="140" y2="80" stroke="var(--accent)" strokeWidth="1" opacity="0.3" />
+      <line x1="160" y1="45" x2="140" y2="80" stroke="var(--accent)" strokeWidth="1" opacity="0.3" />
       <circle cx="100" cy="50" r="40" fill="url(#g1)" />
     </svg>
   )
@@ -39,8 +39,8 @@ function MiniTimeline() {
             position: 'absolute', top: '50%', left: `${p * 100}%`,
             transform: 'translate(-50%, -50%)',
             width: '9px', height: '9px', borderRadius: '50%',
-            background: i === 2 ? '#818cf8' : '#3a3a45',
-            boxShadow: i === 2 ? '0 0 12px rgba(129,140,248,0.6)' : 'none',
+            background: i === 2 ? 'var(--accent)' : 'var(--bg-4)',
+            boxShadow: i === 2 ? '0 0 12px var(--accent-soft)' : 'none',
           }} />
         ))}
       </div>
@@ -50,9 +50,9 @@ function MiniTimeline() {
 
 function MiniPriority() {
   const rows = [
-    { w: '85%', c: '#818cf8' },
-    { w: '60%', c: '#34d399' },
-    { w: '40%', c: '#6b6b76' },
+    { w: '85%', c: 'var(--accent)' },
+    { w: '60%', c: 'var(--success)' },
+    { w: '40%', c: 'var(--text-3)' },
   ]
   return (
     <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '10px', padding: '0 22px' }}>
@@ -115,7 +115,7 @@ export default function FeatureBento() {
       >
         <motion.div variants={fadeUp} style={{
           display: 'inline-block', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase',
-          letterSpacing: '0.08em', color: '#a5b4fc', background: 'rgba(129,140,248,0.08)',
+          letterSpacing: '0.08em', color: 'var(--accent)', background: 'var(--accent-dim)',
           padding: '5px 12px', borderRadius: '20px', marginBottom: '16px',
         }}>
           What you get

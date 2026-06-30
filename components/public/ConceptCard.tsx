@@ -32,35 +32,31 @@ export default function ConceptCard({ concept, index = 0 }: { concept: Concept; 
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', marginBottom: '11px' }}>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                <span style={{ fontWeight: 600, fontSize: '15px', color: 'var(--text)', fontFamily: 'var(--font-heading)' }}>
+                <span style={{ fontWeight: 600, fontSize: '17.5px', color: 'var(--text)', fontFamily: 'var(--font-heading)' }}>
                   {concept.name}
                 </span>
                 {concept.abbreviation && (
                   <span style={{
-                    fontSize: '11px', color: 'var(--text-3)', fontFamily: 'var(--font-mono)',
-                    background: 'var(--bg-4)', padding: '1px 6px', borderRadius: '4px',
+                    fontSize: '12px', color: 'var(--text-2)', fontFamily: 'var(--font-mono)',
+                    background: 'var(--bg-4)', padding: '2px 7px', borderRadius: '4px',
                   }}>{concept.abbreviation}</span>
                 )}
               </div>
             </div>
-            <span style={{ fontSize: '18px', flexShrink: 0 }}>{statusEmoji[concept.status]}</span>
+            <span style={{ fontSize: '20px', flexShrink: 0 }}>{statusEmoji[concept.status]}</span>
           </div>
 
-          <p style={{ fontSize: '13px', color: 'var(--text-2)', lineHeight: '1.55', marginBottom: '15px' }}>
+          <p style={{ fontSize: '14.5px', color: 'var(--text-2)', lineHeight: '1.6', marginBottom: '15px' }}>
             {concept.tldr}
           </p>
 
-          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: 'auto' }}>
             <span className={`pill pill-${concept.status}`}>{concept.status}</span>
             <span className={`pill pill-${concept.difficulty}`}>{concept.difficulty}</span>
-            <span className={`pill pill-${concept.learning_priority}`}>
-              {priorityLabel[concept.learning_priority]}
-            </span>
-            {concept.categories?.slice(0, 2).map(c => (
+            {concept.categories?.map(c => (
               <span key={c} style={{
-                fontSize: '11px', color: 'var(--text-3)',
-                background: 'var(--bg-4)', padding: '2px 7px',
-                borderRadius: '4px', border: '1px solid var(--border)',
+                fontSize: '11px', color: 'var(--text-2)', background: 'var(--bg-4)',
+                padding: '2px 7px', borderRadius: '4px', border: '1px solid var(--border)',
               }}>{c}</span>
             ))}
           </div>

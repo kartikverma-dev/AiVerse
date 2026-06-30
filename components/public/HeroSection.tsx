@@ -23,7 +23,7 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
       justifyContent: 'center',
       alignItems: 'center',
       overflow: 'hidden',
-      background: 'radial-gradient(ellipse 80% 60% at 50% 30%, #0a0a14 0%, #050507 80%)',
+      background: 'var(--hero-bg)',
       padding: '120px 24px 80px',
     }}>
       {/* Texture / vignette layers */}
@@ -67,7 +67,7 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
           width: '320px',
           height: '320px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, var(--hero-orb-1) 0%, transparent 70%)',
           filter: 'blur(50px)',
           pointerEvents: 'none',
           zIndex: 0,
@@ -90,7 +90,7 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
           width: '380px',
           height: '380px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(167,139,250,0.12) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, var(--hero-orb-2) 0%, transparent 70%)',
           filter: 'blur(60px)',
           pointerEvents: 'none',
           zIndex: 0,
@@ -108,7 +108,7 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
         <motion.div variants={stagger.item} style={{ marginBottom: '24px' }}>
           <span style={{
             display: 'inline-flex', alignItems: 'center', gap: '8px',
-            background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.2)',
+            background: 'var(--hero-badge-bg)', border: '1px solid var(--hero-badge-border)',
             borderRadius: '24px', padding: '6px 14px',
             backdropFilter: 'blur(8px)',
           }}>
@@ -137,7 +137,7 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
                 backgroundColor: '#34d399',
               }} />
             </span>
-            <span style={{ fontSize: '12px', color: '#a5b4fc', fontWeight: 600, letterSpacing: '0.02em' }}>
+            <span style={{ fontSize: '12px', color: 'var(--accent-2)', fontWeight: 600, letterSpacing: '0.02em' }}>
               {totalCount} AI concepts tracked · live updates
             </span>
           </span>
@@ -163,7 +163,7 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
 
         {/* Description paragraph */}
         <motion.p variants={stagger.item} style={{
-          fontSize: 'clamp(15px, 1.6vw, 18px)',
+          fontSize: 'clamp(16.5px, 1.8vw, 19.5px)',
           color: 'var(--text-2)',
           maxWidth: '560px',
           margin: '0 auto 36px',
@@ -221,12 +221,12 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
           {/* Card 1: Live Concept Flow (Pathways) */}
           <motion.div
             onClick={() => setActiveCard(activeCard === 0 ? null : 0)}
-            whileHover={{ y: -6, borderColor: 'rgba(99,102,241,0.4)', background: 'rgba(19,19,25,0.6)' }}
+            whileHover={{ y: -6, borderColor: 'var(--accent-border)', background: 'var(--bg-2)' }}
             style={{
               padding: '24px',
               borderRadius: 'var(--radius)',
               border: '1px solid var(--border)',
-              background: 'rgba(13,13,17,0.4)',
+              background: 'var(--glass-bg)',
               backdropFilter: 'blur(16px)',
               cursor: 'pointer',
               transition: 'border-color 0.3s, background-color 0.3s',
@@ -236,7 +236,7 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
               <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-3)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                 Evolutionary Pathways
               </span>
-              <span style={{ fontSize: '12px', color: '#818cf8', fontWeight: 500 }}>Active Flow</span>
+              <span style={{ fontSize: '12px', color: 'var(--accent-2)', fontWeight: 500 }}>Active Flow</span>
             </div>
             <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '16px', fontFamily: 'var(--font-heading)' }}>
               Semantic Lineages
@@ -248,11 +248,12 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
               <svg style={{ position: 'absolute', top: '50%', left: 0, width: '100%', height: '4px', transform: 'translateY(-50%)', zIndex: 0 }}>
                 <line 
                   x1="12" y1="2" x2="95%" y2="2" 
-                  stroke="rgba(99,102,241,0.3)" 
+                  stroke="var(--accent)" 
                   strokeWidth="2" 
                   strokeDasharray="4 4"
                   style={{
-                    animation: 'dashFlow 12s linear infinite'
+                    animation: 'dashFlow 12s linear infinite',
+                    opacity: 'var(--line-opacity)',
                   }}
                 />
               </svg>
@@ -265,11 +266,11 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
                     style={{
                       width: '10px', height: '10px',
                       borderRadius: '50%',
-                      background: i === 3 ? '#34d399' : '#818cf8',
-                      boxShadow: i === 3 ? '0 0 8px #34d399' : '0 0 8px #818cf8',
+                      background: i === 3 ? 'var(--success)' : 'var(--accent-2)',
+                      boxShadow: i === 3 ? '0 0 8px var(--success)' : '0 0 8px var(--accent-2)',
                     }}
                   />
-                  <span style={{ fontSize: '8.5px', color: 'var(--text-2)', marginTop: '6px', fontWeight: 500 }}>
+                  <span style={{ fontSize: '11px', color: 'var(--text-2)', marginTop: '6px', fontWeight: 600 }}>
                     {node}
                   </span>
                 </div>
@@ -280,12 +281,12 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
           {/* Card 2: Ecosystem Status Distribution */}
           <motion.div
             onClick={() => setActiveCard(activeCard === 1 ? null : 1)}
-            whileHover={{ y: -6, borderColor: 'rgba(99,102,241,0.4)', background: 'rgba(19,19,25,0.6)' }}
+            whileHover={{ y: -6, borderColor: 'var(--accent-border)', background: 'var(--bg-2)' }}
             style={{
               padding: '24px',
               borderRadius: 'var(--radius)',
               border: '1px solid var(--border)',
-              background: 'rgba(13,13,17,0.4)',
+              background: 'var(--glass-bg)',
               backdropFilter: 'blur(16px)',
               cursor: 'pointer',
               transition: 'border-color 0.3s, background-color 0.3s',
@@ -295,29 +296,29 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
               <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-3)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                 Status Distribution
               </span>
-              <span style={{ fontSize: '12px', color: '#34d399', fontWeight: 500 }}>Healthy</span>
+              <span style={{ fontSize: '12px', color: 'var(--success)', fontWeight: 500 }}>Healthy</span>
             </div>
             <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '16px', fontFamily: 'var(--font-heading)' }}>
               Maturity Levels
             </h3>
 
             {/* Visual stacked percentage bar */}
-            <div style={{ height: '8px', borderRadius: '4px', display: 'flex', overflow: 'hidden', background: '#222', marginBottom: '12px' }}>
-              <div style={{ width: '40%', background: '#818cf8' }} title="Emerging: 40%" />
-              <div style={{ width: '30%', background: '#34d399' }} title="Growing: 30%" />
-              <div style={{ width: '20%', background: '#38bdf8' }} title="Stable: 20%" />
-              <div style={{ width: '10%', background: '#fbbf24' }} title="Declining: 10%" />
+            <div style={{ height: '8px', borderRadius: '4px', display: 'flex', overflow: 'hidden', background: 'var(--bg-4)', marginBottom: '12px' }}>
+              <div style={{ width: '40%', background: 'var(--emerging)' }} title="Emerging: 40%" />
+              <div style={{ width: '30%', background: 'var(--growing)' }} title="Growing: 30%" />
+              <div style={{ width: '20%', background: 'var(--stable)' }} title="Stable: 20%" />
+              <div style={{ width: '10%', background: 'var(--declining)' }} title="Declining: 10%" />
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--text-2)', fontWeight: 500 }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
-                <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#818cf8' }} /> Emerging
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--text-2)', fontWeight: 600 }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--emerging)' }} /> Emerging
               </span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
-                <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#34d399' }} /> Growing
+              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--growing)' }} /> Growing
               </span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
-                <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#38bdf8' }} /> Stable
+              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--stable)' }} /> Stable
               </span>
             </div>
           </motion.div>
@@ -325,12 +326,12 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
           {/* Card 3: Highlight Paradigm Shift */}
           <motion.div
             onClick={() => setActiveCard(activeCard === 2 ? null : 2)}
-            whileHover={{ y: -6, borderColor: 'rgba(99,102,241,0.4)', background: 'rgba(19,19,25,0.6)' }}
+            whileHover={{ y: -6, borderColor: 'var(--accent-border)', background: 'var(--bg-2)' }}
             style={{
               padding: '24px',
               borderRadius: 'var(--radius)',
               border: '1px solid var(--border)',
-              background: 'rgba(13,13,17,0.4)',
+              background: 'var(--glass-bg)',
               backdropFilter: 'blur(16px)',
               cursor: 'pointer',
               transition: 'border-color 0.3s, background-color 0.3s',
@@ -340,12 +341,12 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
               <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-3)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                 Featured Trend
               </span>
-              <span style={{ fontSize: '12px', color: '#fbbf24', fontWeight: 500 }}>Decline/Shift</span>
+              <span style={{ fontSize: '12px', color: 'var(--warning)', fontWeight: 500 }}>Decline/Shift</span>
             </div>
             <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '6px', fontFamily: 'var(--font-heading)' }}>
               RLHF → DPO
             </h3>
-            <p style={{ fontSize: '12px', color: 'var(--text-2)', lineHeight: 1.4 }}>
+            <p style={{ fontSize: '13.5px', color: 'var(--text-2)', lineHeight: 1.45 }}>
               Preference alignment shifts from complex RL reward models towards direct preference optimization.
             </p>
           </motion.div>

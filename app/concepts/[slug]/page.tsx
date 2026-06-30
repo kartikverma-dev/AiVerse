@@ -74,7 +74,7 @@ export default async function ConceptPage({ params }: { params: Promise<{ slug: 
               padding: '16px 20px',
             }}>
               <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--accent)', marginBottom: '6px', letterSpacing: '0.06em', textTransform: 'uppercase' }}>TL;DR</div>
-              <p style={{ fontSize: '16px', lineHeight: 1.6, color: 'var(--text)' }}>{concept.tldr}</p>
+              <p style={{ fontSize: '18px', lineHeight: 1.6, color: 'var(--text)', fontWeight: 500 }}>{concept.tldr}</p>
             </div>
           </div>
 
@@ -116,8 +116,8 @@ export default async function ConceptPage({ params }: { params: Promise<{ slug: 
                 ))}
                 <div style={{
                   padding: '7px 14px', borderRadius: '20px',
-                  background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)',
-                  fontSize: '13px', color: '#818cf8', fontWeight: 600,
+                  background: 'var(--accent-dim)', border: '1px solid var(--accent-border)',
+                  fontSize: '13px', color: 'var(--accent)', fontWeight: 600,
                 }}>{concept.name}</div>
                 {concept.children?.map(ev => (
                   <div key={ev.id} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -137,8 +137,8 @@ export default async function ConceptPage({ params }: { params: Promise<{ slug: 
 
           {/* Technical definition */}
           <section style={{ marginBottom: '40px' }}>
-            <h2 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '14px' }}>Technical definition</h2>
-            <p style={{ color: 'var(--text-2)', lineHeight: 1.8 }}>{concept.definition_technical}</p>
+            <h2 style={{ fontSize: '19px', fontWeight: 600, marginBottom: '14px' }}>Technical definition</h2>
+            <p style={{ color: 'var(--text-2)', fontSize: '17px', lineHeight: 1.8 }}>{concept.definition_technical}</p>
           </section>
 
           {/* Beginner explanation */}
@@ -149,7 +149,7 @@ export default async function ConceptPage({ params }: { params: Promise<{ slug: 
             <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-3)', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
               💡 Beginner explanation
             </div>
-            <p style={{ color: 'var(--text)', lineHeight: 1.8 }}>{concept.definition_beginner}</p>
+            <p style={{ color: 'var(--text)', fontSize: '16.5px', lineHeight: 1.8 }}>{concept.definition_beginner}</p>
           </section>
 
           {/* Examples */}

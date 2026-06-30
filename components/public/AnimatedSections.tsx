@@ -67,7 +67,7 @@ export default function AnimatedSections({
           <div>
             <motion.div variants={fadeUp} style={{
               display: 'inline-block', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase',
-              letterSpacing: '0.08em', color: '#a5b4fc', background: 'rgba(129,140,248,0.08)',
+              letterSpacing: '0.08em', color: 'var(--accent)', background: 'var(--accent-dim)',
               padding: '5px 12px', borderRadius: '20px', marginBottom: '14px',
             }}>
               Relevance system
@@ -130,7 +130,7 @@ export default function AnimatedSections({
                 <Link href={`/concepts?status=${s.status}`}>
                   <motion.span
                     whileHover={{ x: 3 }}
-                    style={{ fontSize: '12.5px', color: '#818cf8', fontWeight: 500, display: 'inline-block', marginTop: 'auto' }}
+                    style={{ fontSize: '12.5px', color: 'var(--accent)', fontWeight: 500, display: 'inline-block', marginTop: 'auto' }}
                   >
                     Explore →
                   </motion.span>
@@ -163,7 +163,7 @@ export default function AnimatedSections({
                 </h3>
               </div>
               <Link href="/concepts">
-                <motion.span whileHover={{ color: '#a5b4fc' }} style={{ fontSize: '13px', color: '#818cf8', fontWeight: 500 }}>
+                <motion.span whileHover={{ color: 'var(--accent-soft)' }} style={{ fontSize: '13px', color: 'var(--accent)', fontWeight: 500 }}>
                   See all →
                 </motion.span>
               </Link>
@@ -191,7 +191,7 @@ export default function AnimatedSections({
                 </h3>
               </div>
               <Link href="/digest">
-                <motion.span whileHover={{ color: '#a5b4fc' }} style={{ fontSize: '13px', color: '#818cf8', fontWeight: 500 }}>
+                <motion.span whileHover={{ color: 'var(--accent-soft)' }} style={{ fontSize: '13px', color: 'var(--accent)', fontWeight: 500 }}>
                   See all →
                 </motion.span>
               </Link>
@@ -213,14 +213,14 @@ export default function AnimatedSections({
                       style={{ display: 'flex', gap: '16px' }}
                     >
                       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#818cf8', marginTop: '6px', flexShrink: 0 }} />
+                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)', marginTop: '6px', flexShrink: 0 }} />
                         {idx < recentDigestItems.length - 1 && (
                           <div style={{ width: '2px', flex: 1, background: 'var(--border)', minHeight: '48px', margin: '6px 0' }} />
                         )}
                       </div>
                       <div style={{ paddingBottom: '24px', flex: 1 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                          <span style={{ fontSize: '11px', color: 'var(--text-3)', fontWeight: 500 }}>{item.week_of}</span>
+                          <span style={{ fontSize: '11px', color: 'var(--text-2)', fontWeight: 500 }}>{item.week_of}</span>
                           <span style={{
                             fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.05em',
                             background: 'var(--bg-4)', border: '1px solid var(--border)', color: 'var(--text-2)',
@@ -230,7 +230,7 @@ export default function AnimatedSections({
                         <p style={{ fontSize: '13px', lineHeight: 1.55, color: 'var(--text-2)', marginBottom: '8px' }}>{item.summary}</p>
                         {item.concept && (
                           <Link href={`/concepts/${item.concept.slug}`}>
-                            <motion.span whileHover={{ color: '#a5b4fc' }} style={{ display: 'inline-block', fontSize: '12px', color: '#818cf8', fontWeight: 500 }}>
+                            <motion.span whileHover={{ color: 'var(--accent-soft)' }} style={{ display: 'inline-block', fontSize: '12px', color: 'var(--accent)', fontWeight: 500 }}>
                               View {item.concept.name} {statusEmoji[item.concept.status]}
                             </motion.span>
                           </Link>

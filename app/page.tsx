@@ -7,6 +7,7 @@ import TermMarquee from '@/components/public/TermMarquee'
 import FeatureBento from '@/components/public/FeatureBento'
 import AnimatedSections from '@/components/public/AnimatedSections'
 import CtaFooter from '@/components/public/CtaFooter'
+import FlashcardModal from '@/components/public/FlashcardModal'
 
 export const revalidate = 60
 
@@ -42,6 +43,7 @@ export default async function Home() {
   return (
     <>
       <Nav />
+      <FlashcardModal concepts={allConcepts} />
       <main style={{ position: 'relative', overflowX: 'hidden', background: 'var(--bg)', color: 'var(--text)' }}>
 
         {/* Cinematic 3D hero — crystal centerpiece, stacked editorial type */}
@@ -63,7 +65,7 @@ export default async function Home() {
           <div style={{ textAlign: 'center', marginBottom: '36px', maxWidth: '600px' }}>
             <div style={{
               display: 'inline-block', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase',
-              letterSpacing: '0.08em', color: '#a5b4fc', background: 'rgba(129,140,248,0.08)',
+              letterSpacing: '0.08em', color: 'var(--accent)', background: 'var(--accent-dim)',
               padding: '5px 12px', borderRadius: '20px', marginBottom: '16px',
             }}>
               Sandbox

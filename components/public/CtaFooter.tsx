@@ -16,8 +16,8 @@ export default function CtaFooter() {
             maxWidth: '1100px', margin: '0 auto',
             position: 'relative', overflow: 'hidden',
             borderRadius: '24px', padding: '64px 40px',
-            background: 'linear-gradient(135deg, #15151f 0%, #0d0d14 100%)',
-            border: '1px solid var(--border-strong)',
+            background: 'var(--cta-bg)',
+            border: '1px solid var(--cta-border)',
             textAlign: 'center',
           }}
         >
@@ -36,11 +36,12 @@ export default function CtaFooter() {
             <h2 style={{
               fontSize: 'clamp(26px, 4vw, 40px)', fontWeight: 700, marginBottom: '14px',
               fontFamily: 'var(--font-heading)', letterSpacing: '-0.025em',
+              color: 'var(--cta-text)',
             }}>
               Stop chasing headlines.<br />
               <span className="gradient-text">Start tracking the evolution.</span>
             </h2>
-            <p style={{ color: 'var(--text-2)', fontSize: '15px', maxWidth: '460px', margin: '0 auto 32px' }}>
+            <p style={{ color: 'var(--cta-text-2)', fontSize: '15px', maxWidth: '460px', margin: '0 auto 32px' }}>
               Free, weekly, and built for people who want signal — not hype.
             </p>
             <Link href="/concepts">

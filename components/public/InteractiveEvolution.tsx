@@ -96,7 +96,7 @@ export default function InteractiveEvolution({ concepts }: { concepts: Concept[]
                       onClick={() => setSelectedSlug(concept.slug)}
                       className={`flow-node-card ${isSelected ? 'selected' : ''}`}
                     >
-                      <div className="node-status-indicator" style={{ background: `var(--status-${concept.status})` }} />
+                      <div className="node-status-indicator" style={{ background: `var(--${concept.status})` }} />
                       <span className="node-name">{concept.name}</span>
                       <span className="node-year">{concept.first_appeared || 'N/A'}</span>
                     </div>
@@ -213,8 +213,8 @@ export default function InteractiveEvolution({ concepts }: { concepts: Concept[]
           color: var(--text);
         }
         .chain-tab-btn.active {
-          color: #818cf8;
-          border-color: #818cf8;
+          color: var(--accent);
+          border-color: var(--accent);
         }
         .active-tab-glow {
           position: absolute;
@@ -275,9 +275,9 @@ export default function InteractiveEvolution({ concepts }: { concepts: Concept[]
           background: var(--bg-4);
         }
         .flow-node-card.selected {
-          border-color: #818cf8;
+          border-color: var(--accent);
           background: var(--bg-4);
-          box-shadow: 0 0 12px rgba(129, 140, 248, 0.2);
+          box-shadow: 0 0 12px var(--accent-dim);
         }
         .node-status-indicator {
           width: 8px;
@@ -376,7 +376,7 @@ export default function InteractiveEvolution({ concepts }: { concepts: Concept[]
           font-size: 11px;
           text-transform: uppercase;
           letter-spacing: 0.05em;
-          color: #818cf8;
+          color: var(--accent-2);
           font-weight: 600;
           margin-bottom: 4px;
         }

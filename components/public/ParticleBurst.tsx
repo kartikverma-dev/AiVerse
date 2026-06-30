@@ -83,13 +83,13 @@ export default function ParticleBurst() {
     <section ref={ref} style={{
       position: 'relative', minHeight: '120vh',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      background: '#050507', overflow: 'hidden',
+      background: 'var(--bg)', overflow: 'hidden',
     }}>
       {/* Radial glow backdrop that scales with scroll */}
       <motion.div
         style={{
           position: 'absolute', width: '600px', height: '600px', borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(129,140,248,0.35) 0%, rgba(99,102,241,0.12) 40%, transparent 70%)',
+          background: 'radial-gradient(circle, var(--hero-orb-1) 0%, transparent 70%)',
           filter: 'blur(40px)',
           scale: bgScale,
           opacity: bgOpacity,
@@ -120,7 +120,7 @@ export default function ParticleBurst() {
         style={{ position: 'relative', zIndex: 2, textAlign: 'center', opacity: textOpacity, y: textY }}
       >
         <div style={{
-          fontSize: '11px', fontWeight: 600, color: '#a5b4fc',
+          fontSize: '11px', fontWeight: 600, color: 'var(--accent-2)',
           letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '20px',
         }}>
           The numbers behind the map
@@ -134,7 +134,7 @@ export default function ParticleBurst() {
               }} className="gradient-text">
                 <CountUp target={s.value} suffix={s.suffix} active={inView} />
               </div>
-              <div style={{ fontSize: '13px', color: 'var(--text-3)', fontWeight: 500, marginTop: '6px' }}>
+              <div style={{ fontSize: '13px', color: 'var(--text-2)', fontWeight: 500, marginTop: '6px' }}>
                 {s.label}
               </div>
             </div>

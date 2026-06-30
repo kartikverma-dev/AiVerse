@@ -43,7 +43,7 @@ export default function ConceptsClient() {
       padding: '5px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 500,
       border: `1px solid ${active ? 'var(--accent-border)' : 'var(--border)'}`,
       background: active ? 'var(--accent-dim)' : 'transparent',
-      color: active ? '#818cf8' : 'var(--text-2)', cursor: 'pointer',
+      color: active ? 'var(--accent)' : 'var(--text-2)', cursor: 'pointer',
     }}>{label}</button>
   )
 

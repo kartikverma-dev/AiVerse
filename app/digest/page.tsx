@@ -4,11 +4,11 @@ import Link from 'next/link'
 
 export const revalidate = 60
 
-const typeLabel: Record<string, { label: string; color: string; bg: string }> = {
-  new_concept: { label: 'New concept', color: '#4ade80', bg: 'rgba(34,197,94,0.1)' },
-  status_change: { label: 'Status change', color: '#818cf8', bg: 'rgba(99,102,241,0.1)' },
-  notable_paper: { label: 'Notable paper', color: '#60a5fa', bg: 'rgba(59,130,246,0.1)' },
-  framework_release: { label: 'Framework release', color: '#fbbf24', bg: 'rgba(245,158,11,0.1)' },
+const typeLabel: Record<string, { label: string; color: string; bg: string; border: string }> = {
+  new_concept: { label: 'New concept', color: 'var(--success)', bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.2)' },
+  status_change: { label: 'Status change', color: 'var(--accent-2)', bg: 'var(--accent-dim)', border: 'var(--accent-border)' },
+  notable_paper: { label: 'Notable paper', color: 'var(--stable)', bg: 'rgba(14,165,233,0.08)', border: 'rgba(14,165,233,0.2)' },
+  framework_release: { label: 'Framework release', color: 'var(--warning)', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.2)' },
 }
 
 export default async function DigestPage() {
@@ -53,12 +53,12 @@ export default async function DigestPage() {
               {weeks.map((week, wi) => (
                 <section key={week}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
-                    <h2 style={{ fontSize: '18px', fontWeight: 600 }}>Week of {fmt(week)}</h2>
+                    <h2 style={{ fontSize: '19.5px', fontWeight: 600 }}>Week of {fmt(week)}</h2>
                     {wi === 0 && (
                       <span style={{
                         fontSize: '10px', fontWeight: 600, padding: '2px 8px',
-                        background: 'rgba(99,102,241,0.12)', color: '#818cf8',
-                        border: '1px solid rgba(99,102,241,0.25)', borderRadius: '20px',
+                        background: 'var(--accent-dim)', color: 'var(--accent)',
+                        border: '1px solid var(--accent-border)', borderRadius: '20px',
                         letterSpacing: '0.06em', textTransform: 'uppercase',
                       }}>Latest</span>
                     )}
@@ -74,9 +74,9 @@ export default async function DigestPage() {
                         }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
                             <span style={{
-                              fontSize: '11px', fontWeight: 600, padding: '3px 8px',
+                              fontSize: '12px', fontWeight: 600, padding: '3px 8px',
                               background: t.bg, color: t.color,
-                              border: `1px solid ${t.color}33`, borderRadius: '20px',
+                              border: `1px solid ${t.border}`, borderRadius: '20px',
                             }}>{t.label}</span>
                             {entry.concept && (
                               <Link href={`/concepts/${entry.concept.slug}`}>
@@ -86,7 +86,7 @@ export default async function DigestPage() {
                               </Link>
                             )}
                           </div>
-                          <p style={{ color: 'var(--text-2)', fontSize: '14px', lineHeight: 1.7 }}>
+                          <p style={{ color: 'var(--text-2)', fontSize: '15px', lineHeight: 1.7 }}>
                             {entry.summary}
                           </p>
                         </div>

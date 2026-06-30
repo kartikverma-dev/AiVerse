@@ -52,7 +52,7 @@ export default function AdminSidebar() {
               padding: '7px 10px', borderRadius: 'var(--radius)', margin: '1px 0',
               fontSize: '13px', fontWeight: isActive(item.href, item.exact) ? 500 : 400,
               background: isActive(item.href, item.exact) ? 'rgba(99,102,241,0.1)' : 'transparent',
-              color: isActive(item.href, item.exact) ? '#818cf8' : 'var(--text-2)',
+              color: isActive(item.href, item.exact) ? 'var(--accent)' : 'var(--text-2)',
               cursor: 'pointer',
             }}>
               <span style={{ fontSize: '16px', width: '16px', textAlign: 'center' }}>{item.icon}</span>

@@ -5,8 +5,8 @@ import Link from 'next/link'
 export const revalidate = 60
 
 const statusColor: Record<string, string> = {
-  emerging: '#818cf8', growing: '#4ade80',
-  stable: '#60a5fa', declining: '#fbbf24', historical: '#71717a'
+  emerging: 'var(--emerging)', growing: 'var(--growing)',
+  stable: 'var(--stable)', declining: 'var(--declining)', historical: 'var(--historical)'
 }
 
 export default async function TimelinePage() {
@@ -48,13 +48,13 @@ export default async function TimelinePage() {
       <div key={conceptId} style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
         <Link href={`/concepts/${concept.slug}`} className="timeline-card-link">
           <div className="timeline-card" style={{
-            border: `1px solid ${statusColor[concept.status] || 'var(--border)'}22`,
+            border: '1px solid var(--border)',
             borderLeft: `3px solid ${statusColor[concept.status] || 'var(--border)'}`,
           }}>
             <div>
-              <div style={{ fontWeight: 600, fontSize: '14px' }}>{concept.name}</div>
+              <div style={{ fontWeight: 600, fontSize: '15.5px' }}>{concept.name}</div>
               {concept.first_appeared && (
-                <div style={{ fontSize: '11px', color: 'var(--text-3)', marginTop: '2px' }}>{concept.first_appeared}</div>
+                <div style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '2px' }}>{concept.first_appeared}</div>
               )}
             </div>
             <span className={`pill pill-${concept.status}`} style={{ marginLeft: 'auto' }}>{concept.status}</span>
@@ -160,7 +160,7 @@ export default async function TimelinePage() {
           border-radius: 20px;
           background: var(--bg-2);
           border: 1px solid var(--border);
-          font-size: 13px;
+          font-size: 14.5px;
           color: var(--text-2);
           cursor: pointer;
           transition: border-color 0.15s;
