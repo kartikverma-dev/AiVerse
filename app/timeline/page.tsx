@@ -52,12 +52,12 @@ export default async function TimelinePage() {
             borderLeft: `3px solid ${statusColor[concept.status] || 'var(--border)'}`,
           }}>
             <div>
-              <div style={{ fontWeight: 600, fontSize: '15.5px' }}>{concept.name}</div>
+              <div style={{ fontWeight: 600, fontSize: '16px', color: 'var(--text)' }}>{concept.name}</div>
               {concept.first_appeared && (
-                <div style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '2px' }}>{concept.first_appeared}</div>
+                <div style={{ fontSize: '11px', color: 'var(--text-3)', marginTop: '4px', fontFamily: 'var(--font-mono)' }}>{concept.first_appeared}</div>
               )}
             </div>
-            <span className={`pill pill-${concept.status}`} style={{ marginLeft: 'auto' }}>{concept.status}</span>
+            <span className={`pill pill-${concept.status}`} style={{ marginLeft: 'auto', fontFamily: 'var(--font-mono)' }}>{concept.status}</span>
           </div>
         </Link>
 
@@ -66,8 +66,9 @@ export default async function TimelinePage() {
             {children.map((ev, idx) => (
               <div key={`${ev.parent_concept_id}-${ev.child_concept_id}-${idx}`} style={{ marginTop: '8px' }}>
                 <div style={{
-                  fontSize: '11px', color: 'var(--text-3)', padding: '4px 0 4px 0',
-                  fontWeight: 500, letterSpacing: '0.04em',
+                  fontSize: '10px', color: 'var(--text-3)', padding: '4px 0',
+                  fontWeight: 600, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)',
+                  textTransform: 'uppercase',
                 }}>
                   {relLabel[ev.relationship_type] || ev.relationship_type}
                   {(ev as any).year && ` · ${(ev as any).year}`}
@@ -88,11 +89,11 @@ export default async function TimelinePage() {
   return (
     <>
       <Nav />
-      <main style={{ paddingTop: '56px', minHeight: '100vh' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '48px 24px' }}>
-          <div style={{ marginBottom: '40px' }}>
-            <h1 style={{ fontSize: '32px', fontWeight: 700, marginBottom: '8px' }}>Evolution timeline</h1>
-            <p style={{ color: 'var(--text-2)' }}>
+      <main style={{ paddingTop: '56px', minHeight: '100vh', background: 'var(--bg)' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '56px 24px 80px' }}>
+          <div style={{ marginBottom: '44px' }}>
+            <h1 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800, fontFamily: 'var(--font-heading)', color: 'var(--text)', marginBottom: '10px' }}>Evolution timeline</h1>
+            <p style={{ color: 'var(--text-2)', fontSize: '15.5px' }}>
               How AI ideas are born from others — click any concept to explore it in depth.
             </p>
           </div>
@@ -101,13 +102,13 @@ export default async function TimelinePage() {
             <div style={{ textAlign: 'center', padding: '80px', color: 'var(--text-2)' }}>
               <div style={{ fontSize: '40px', marginBottom: '12px' }}>🌱</div>
               <p>No concepts yet. Add some from the admin panel.</p>
-              <Link href="/admin" style={{ color: 'var(--accent)', marginTop: '12px', display: 'block' }}>Go to Admin →</Link>
+              <Link href="/admin" style={{ color: 'var(--accent)', marginTop: '12px', display: 'block', textDecoration: 'none' }}>Go to Admin →</Link>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '48px' }}>
               {roots.length > 0 && (
                 <section>
-                  <h2 style={{ fontWeight: 600, color: 'var(--text-2)', marginBottom: '24px', textTransform: 'uppercase', letterSpacing: '0.06em', fontSize: '12px' }}>
+                  <h2 style={{ fontWeight: 600, color: 'var(--text-3)', marginBottom: '24px', textTransform: 'uppercase', letterSpacing: '0.08em', fontSize: '11px', fontFamily: 'var(--font-mono)' }}>
                     Evolution chains
                   </h2>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px' }}>
@@ -120,7 +121,7 @@ export default async function TimelinePage() {
 
               {standalone.length > 0 && (
                 <section>
-                  <h2 style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-2)', marginBottom: '20px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  <h2 style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-3)', marginBottom: '20px', textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: 'var(--font-mono)' }}>
                     Independent concepts
                   </h2>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
@@ -144,29 +145,32 @@ export default async function TimelinePage() {
         .timeline-card {
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 12px;
           background: var(--bg-2);
           border-radius: var(--radius);
-          padding: 12px 18px;
+          padding: 14px 20px;
           cursor: pointer;
           min-width: 240px;
-          transition: background 0.15s;
+          transition: background 0.2s, border-color 0.2s;
         }
         .timeline-card:hover {
           background: var(--bg-3);
+          border-color: var(--accent-border);
         }
         .standalone-concept-badge {
-          padding: 8px 16px;
-          border-radius: 20px;
+          padding: 8px 18px;
+          border-radius: var(--radius);
           background: var(--bg-2);
           border: 1px solid var(--border);
-          font-size: 14.5px;
+          font-size: 13.5px;
           color: var(--text-2);
           cursor: pointer;
-          transition: border-color 0.15s;
+          transition: border-color 0.2s, background-color 0.2s, color 0.2s;
         }
         .standalone-concept-badge:hover {
-          border-color: var(--border-strong);
+          border-color: var(--accent);
+          background: var(--bg-3);
+          color: var(--text);
         }
       `}</style>
     </>

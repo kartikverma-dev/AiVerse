@@ -24,7 +24,7 @@ export default function ConceptCard({ concept, index = 0 }: { concept: Concept; 
           transition={{ duration: 0.2 }}
           style={{
             position: 'relative', background: 'var(--bg-2)',
-            border: '1px solid var(--border)', borderRadius: '14px',
+            border: '1px solid var(--border)', borderRadius: 'var(--radius)',
             padding: '20px', cursor: 'pointer', overflow: 'hidden',
           }}
           className="concept-card-hoverable"
@@ -32,13 +32,14 @@ export default function ConceptCard({ concept, index = 0 }: { concept: Concept; 
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', marginBottom: '11px' }}>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                <span style={{ fontWeight: 600, fontSize: '17.5px', color: 'var(--text)', fontFamily: 'var(--font-heading)' }}>
+                <span style={{ fontWeight: 600, fontSize: '18px', color: 'var(--text)', fontFamily: 'var(--font-heading)' }}>
                   {concept.name}
                 </span>
                 {concept.abbreviation && (
                   <span style={{
-                    fontSize: '12px', color: 'var(--text-2)', fontFamily: 'var(--font-mono)',
-                    background: 'var(--bg-4)', padding: '2px 7px', borderRadius: '4px',
+                    fontSize: '11px', color: 'var(--text-2)', fontFamily: 'var(--font-mono)',
+                    background: 'var(--bg-3)', padding: '2px 7px', borderRadius: '4px',
+                    border: '1px solid var(--border)',
                   }}>{concept.abbreviation}</span>
                 )}
               </div>
@@ -46,16 +47,16 @@ export default function ConceptCard({ concept, index = 0 }: { concept: Concept; 
             <span style={{ fontSize: '20px', flexShrink: 0 }}>{statusEmoji[concept.status]}</span>
           </div>
 
-          <p style={{ fontSize: '14.5px', color: 'var(--text-2)', lineHeight: '1.6', marginBottom: '15px' }}>
+          <p style={{ fontSize: '14.5px', color: 'var(--text-2)', lineHeight: '1.65', marginBottom: '15px' }}>
             {concept.tldr}
           </p>
 
-          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: 'auto' }}>
+          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: 'auto', fontFamily: 'var(--font-mono)', fontSize: '11px' }}>
             <span className={`pill pill-${concept.status}`}>{concept.status}</span>
             <span className={`pill pill-${concept.difficulty}`}>{concept.difficulty}</span>
             {concept.categories?.map(c => (
               <span key={c} style={{
-                fontSize: '11px', color: 'var(--text-2)', background: 'var(--bg-4)',
+                fontSize: '11px', color: 'var(--text-2)', background: 'var(--bg-3)',
                 padding: '2px 7px', borderRadius: '4px', border: '1px solid var(--border)',
               }}>{c}</span>
             ))}
@@ -66,9 +67,9 @@ export default function ConceptCard({ concept, index = 0 }: { concept: Concept; 
         .concept-card-hoverable::before {
           content: '';
           position: absolute; inset: 0;
-          border-radius: 14px;
+          border-radius: var(--radius);
           padding: 1px;
-          background: linear-gradient(135deg, rgba(129,140,248,0), rgba(129,140,248,0));
+          background: linear-gradient(135deg, rgba(212,175,55,0), rgba(212,175,55,0));
           -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
           -webkit-mask-composite: xor;
           mask-composite: exclude;
@@ -76,7 +77,7 @@ export default function ConceptCard({ concept, index = 0 }: { concept: Concept; 
           pointer-events: none;
         }
         .concept-card-hoverable:hover::before {
-          background: linear-gradient(135deg, rgba(129,140,248,0.5), rgba(99,102,241,0.1));
+          background: linear-gradient(135deg, rgba(212,175,55,0.4), rgba(212,175,55,0.1));
         }
         .concept-card-hoverable:hover {
           background: var(--bg-3);

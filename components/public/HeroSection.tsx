@@ -29,11 +29,11 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
       {/* Texture / vignette layers */}
       <div style={{
         position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
-        background: 'radial-gradient(circle at 50% 35%, rgba(99,102,241,0.08) 0%, transparent 60%)',
+        background: 'radial-gradient(circle at 50% 35%, var(--hero-orb-1) 0%, transparent 60%)',
       }} />
       <div style={{
         position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
-        boxShadow: 'inset 0 0 160px 40px rgba(0,0,0,0.85)',
+        boxShadow: 'var(--hero-vignette)',
       }} />
 
       {/* Slowly drifting background grid */}
@@ -42,7 +42,7 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
         style={{
           position: 'absolute',
           inset: 0,
-          opacity: 0.25,
+          opacity: 0.15,
           zIndex: 0,
           pointerEvents: 'none',
           animation: 'gridDrift 28s linear infinite',
@@ -124,7 +124,7 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
                 height: '100%',
                 width: '100%',
                 borderRadius: '50%',
-                backgroundColor: '#34d399',
+                backgroundColor: 'var(--success)',
                 opacity: 0.75,
                 animation: 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite',
               }} />
@@ -134,11 +134,11 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
                 borderRadius: '50%',
                 height: '7px',
                 width: '7px',
-                backgroundColor: '#34d399',
+                backgroundColor: 'var(--success)',
               }} />
             </span>
-            <span style={{ fontSize: '12px', color: 'var(--accent-2)', fontWeight: 600, letterSpacing: '0.02em' }}>
-              {totalCount} AI concepts tracked · live updates
+            <span style={{ fontSize: '11px', color: 'var(--accent)', fontWeight: 600, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>
+              {totalCount} AI concepts tracked · archive active
             </span>
           </span>
         </motion.div>
@@ -148,9 +148,8 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
           fontSize: 'clamp(44px, 8.5vw, 92px)',
           fontWeight: 800,
           lineHeight: 1.05,
-          letterSpacing: '-0.04em',
+          letterSpacing: '-0.03em',
           fontFamily: 'var(--font-heading)',
-          textTransform: 'uppercase',
           marginBottom: '20px',
         }}>
           <motion.span variants={stagger.item} style={{ display: 'block', color: 'var(--text)' }}>
@@ -176,15 +175,15 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
         <motion.div variants={stagger.item} style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '64px' }}>
           <Link href="/concepts">
             <motion.span
-              whileHover={{ scale: 1.03, boxShadow: '0 12px 36px rgba(99,102,241,0.45)' }}
-              whileTap={{ scale: 0.97 }}
+              whileHover={{ scale: 1.02, background: 'var(--accent-soft)' }}
+              whileTap={{ scale: 0.98 }}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '8px',
                 padding: '14px 28px',
-                background: 'linear-gradient(135deg, #818cf8, #6366f1)',
-                color: 'white', borderRadius: '11px', fontWeight: 600, fontSize: '15px',
-                boxShadow: '0 6px 24px rgba(99,102,241,0.25)',
+                background: 'var(--accent)',
+                color: 'var(--bg-1)', borderRadius: '11px', fontWeight: 600, fontSize: '15px',
                 cursor: 'pointer',
+                transition: 'background-color 0.2s',
               }}
             >
               Explore the library <span>→</span>
@@ -192,13 +191,14 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
           </Link>
           <Link href="/graph">
             <motion.span
-              whileHover={{ borderColor: 'rgba(255,255,255,0.25)', background: 'rgba(255,255,255,0.03)' }}
-              whileTap={{ scale: 0.97 }}
+              whileHover={{ borderColor: 'var(--accent)', background: 'var(--accent-dim)' }}
+              whileTap={{ scale: 0.98 }}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '8px',
                 padding: '14px 28px', color: 'var(--text)', borderRadius: '11px',
                 fontWeight: 500, fontSize: '15px', border: '1px solid var(--border-strong)',
                 cursor: 'pointer',
+                transition: 'border-color 0.2s, background-color 0.2s',
               }}
             >
               View force graph
@@ -233,12 +233,12 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-3)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-3)', letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>
                 Evolutionary Pathways
               </span>
-              <span style={{ fontSize: '12px', color: 'var(--accent-2)', fontWeight: 500 }}>Active Flow</span>
+              <span style={{ fontSize: '11px', color: 'var(--accent-2)', fontWeight: 600, fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>Active Flow</span>
             </div>
-            <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '16px', fontFamily: 'var(--font-heading)' }}>
+            <h3 style={{ fontSize: '19px', fontWeight: 600, marginBottom: '16px', fontFamily: 'var(--font-heading)', color: 'var(--text)' }}>
               Semantic Lineages
             </h3>
             
@@ -264,13 +264,13 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
                     animate={activeCard === 0 ? { scale: [1, 1.25, 1] } : {}}
                     transition={{ delay: i * 0.15, duration: 0.6 }}
                     style={{
-                      width: '10px', height: '10px',
+                      width: '9px', height: '9px',
                       borderRadius: '50%',
-                      background: i === 3 ? 'var(--success)' : 'var(--accent-2)',
-                      boxShadow: i === 3 ? '0 0 8px var(--success)' : '0 0 8px var(--accent-2)',
+                      background: i === 3 ? 'var(--success)' : 'var(--accent)',
+                      border: '2px solid var(--bg-1)',
                     }}
                   />
-                  <span style={{ fontSize: '11px', color: 'var(--text-2)', marginTop: '6px', fontWeight: 600 }}>
+                  <span style={{ fontSize: '10px', color: 'var(--text-2)', marginTop: '6px', fontWeight: 600, fontFamily: 'var(--font-mono)' }}>
                     {node}
                   </span>
                 </div>
@@ -293,12 +293,12 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-3)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-3)', letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>
                 Status Distribution
               </span>
-              <span style={{ fontSize: '12px', color: 'var(--success)', fontWeight: 500 }}>Healthy</span>
+              <span style={{ fontSize: '11px', color: 'var(--success)', fontWeight: 600, fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>Healthy</span>
             </div>
-            <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '16px', fontFamily: 'var(--font-heading)' }}>
+            <h3 style={{ fontSize: '19px', fontWeight: 600, marginBottom: '16px', fontFamily: 'var(--font-heading)', color: 'var(--text)' }}>
               Maturity Levels
             </h3>
 
@@ -310,7 +310,7 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
               <div style={{ width: '10%', background: 'var(--declining)' }} title="Declining: 10%" />
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--text-2)', fontWeight: 600 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-2)', fontWeight: 600, fontFamily: 'var(--font-mono)' }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--emerging)' }} /> Emerging
               </span>
@@ -338,15 +338,15 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-3)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-3)', letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>
                 Featured Trend
               </span>
-              <span style={{ fontSize: '12px', color: 'var(--warning)', fontWeight: 500 }}>Decline/Shift</span>
+              <span style={{ fontSize: '11px', color: 'var(--accent)', fontWeight: 600, fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>Paradigm Shift</span>
             </div>
-            <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '6px', fontFamily: 'var(--font-heading)' }}>
+            <h3 style={{ fontSize: '19px', fontWeight: 600, marginBottom: '6px', fontFamily: 'var(--font-heading)', color: 'var(--text)' }}>
               RLHF → DPO
             </h3>
-            <p style={{ fontSize: '13.5px', color: 'var(--text-2)', lineHeight: 1.45 }}>
+            <p style={{ fontSize: '14.5px', color: 'var(--text-2)', lineHeight: 1.5 }}>
               Preference alignment shifts from complex RL reward models towards direct preference optimization.
             </p>
           </motion.div>

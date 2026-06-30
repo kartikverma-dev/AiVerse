@@ -12,11 +12,11 @@ import FlashcardModal from '@/components/public/FlashcardModal'
 export const revalidate = 60
 
 const statusColor: Record<string, string> = {
-  emerging: '#818cf8',
-  growing: '#34d399',
-  stable: '#38bdf8',
-  declining: '#fbbf24',
-  historical: '#6b6b76',
+  emerging: 'var(--emerging)',
+  growing: 'var(--growing)',
+  stable: 'var(--stable)',
+  declining: 'var(--declining)',
+  historical: 'var(--historical)',
 }
 
 const statusEmoji: Record<string, string> = {
@@ -67,6 +67,7 @@ export default async function Home() {
               display: 'inline-block', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase',
               letterSpacing: '0.08em', color: 'var(--accent)', background: 'var(--accent-dim)',
               padding: '5px 12px', borderRadius: '20px', marginBottom: '16px',
+              fontFamily: 'var(--font-mono)', border: '1px solid var(--accent-border)',
             }}>
               Sandbox
             </div>

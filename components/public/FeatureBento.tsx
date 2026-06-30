@@ -12,18 +12,18 @@ function MiniGraph() {
     <svg viewBox="0 0 200 100" style={{ width: '100%', height: '100%', position: 'absolute', inset: 0, opacity: 0.9 }}>
       <defs>
         <radialGradient id="g1" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#6366f1" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="#6366f1" stopOpacity="0" />
+          <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.3" />
+          <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
         </radialGradient>
       </defs>
       {[[40,30],[100,20],[160,45],[70,70],[140,80]].map(([x,y], i) => (
         <circle key={i} cx={x} cy={y} r="3" fill="var(--accent)" opacity="0.8" />
       ))}
-      <line x1="40" y1="30" x2="100" y2="20" stroke="var(--accent)" strokeWidth="1" opacity="0.3" />
-      <line x1="100" y1="20" x2="160" y2="45" stroke="var(--accent)" strokeWidth="1" opacity="0.3" />
-      <line x1="40" y1="30" x2="70" y2="70" stroke="var(--accent)" strokeWidth="1" opacity="0.3" />
-      <line x1="70" y1="70" x2="140" y2="80" stroke="var(--accent)" strokeWidth="1" opacity="0.3" />
-      <line x1="160" y1="45" x2="140" y2="80" stroke="var(--accent)" strokeWidth="1" opacity="0.3" />
+      <line x1="40" y1="30" x2="100" y2="20" stroke="var(--accent)" strokeWidth="1" opacity="0.25" />
+      <line x1="100" y1="20" x2="160" y2="45" stroke="var(--accent)" strokeWidth="1" opacity="0.25" />
+      <line x1="40" y1="30" x2="70" y2="70" stroke="var(--accent)" strokeWidth="1" opacity="0.25" />
+      <line x1="70" y1="70" x2="140" y2="80" stroke="var(--accent)" strokeWidth="1" opacity="0.25" />
+      <line x1="160" y1="45" x2="140" y2="80" stroke="var(--accent)" strokeWidth="1" opacity="0.25" />
       <circle cx="100" cy="50" r="40" fill="url(#g1)" />
     </svg>
   )
@@ -38,9 +38,9 @@ function MiniTimeline() {
           <div key={i} style={{
             position: 'absolute', top: '50%', left: `${p * 100}%`,
             transform: 'translate(-50%, -50%)',
-            width: '9px', height: '9px', borderRadius: '50%',
+            width: '8px', height: '8px', borderRadius: '50%',
             background: i === 2 ? 'var(--accent)' : 'var(--bg-4)',
-            boxShadow: i === 2 ? '0 0 12px var(--accent-soft)' : 'none',
+            border: i === 2 ? '2px solid var(--bg-1)' : 'none',
           }} />
         ))}
       </div>
@@ -51,7 +51,7 @@ function MiniTimeline() {
 function MiniPriority() {
   const rows = [
     { w: '85%', c: 'var(--accent)' },
-    { w: '60%', c: 'var(--success)' },
+    { w: '60%', c: 'var(--accent-2)' },
     { w: '40%', c: 'var(--text-3)' },
   ]
   return (
@@ -117,12 +117,14 @@ export default function FeatureBento() {
           display: 'inline-block', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase',
           letterSpacing: '0.08em', color: 'var(--accent)', background: 'var(--accent-dim)',
           padding: '5px 12px', borderRadius: '20px', marginBottom: '16px',
+          fontFamily: 'var(--font-mono)', border: '1px solid var(--accent-border)',
         }}>
           What you get
         </motion.div>
         <motion.h2 variants={fadeUp} style={{
           fontSize: 'clamp(28px, 3.5vw, 42px)', fontWeight: 700,
           fontFamily: 'var(--font-heading)', letterSpacing: '-0.025em', marginBottom: '12px',
+          color: 'var(--text)',
         }}>
           One map of the entire AI landscape
         </motion.h2>
@@ -145,12 +147,12 @@ export default function FeatureBento() {
           <Link key={i} href={c.href} style={{ gridColumn: c.span === 'large' ? 'span 2' : 'span 1' }} className="bento-link">
             <motion.div
               variants={fadeUp}
-              whileHover={{ y: -4, borderColor: 'rgba(99,102,241,0.3)' }}
+              whileHover={{ y: -4, borderColor: 'var(--accent-border)' }}
               transition={{ duration: 0.25 }}
               style={{
                 position: 'relative', overflow: 'hidden',
                 background: 'var(--bg-2)', border: '1px solid var(--border)',
-                borderRadius: '18px', padding: '26px',
+                borderRadius: 'var(--radius)', padding: '26px',
                 height: '230px', display: 'flex', flexDirection: 'column',
                 cursor: 'pointer',
               }}
@@ -165,12 +167,13 @@ export default function FeatureBento() {
               <div style={{ position: 'relative', zIndex: 1, marginTop: 'auto' }}>
                 {c.icon && <div style={{ fontSize: '22px', marginBottom: '10px' }}>{c.icon}</div>}
                 <h3 style={{
-                  fontSize: '17px', fontWeight: 700, marginBottom: '8px',
+                  fontSize: '19px', fontWeight: 700, marginBottom: '8px',
                   fontFamily: 'var(--font-heading)', letterSpacing: '-0.01em',
+                  color: 'var(--text)',
                 }}>
                   {c.title}
                 </h3>
-                <p style={{ fontSize: '13px', color: 'var(--text-2)', lineHeight: 1.55, maxWidth: '380px' }}>
+                <p style={{ fontSize: '13.5px', color: 'var(--text-2)', lineHeight: 1.55, maxWidth: '380px' }}>
                   {c.desc}
                 </p>
               </div>

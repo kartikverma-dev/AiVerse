@@ -107,8 +107,9 @@ export default function GraphClient({ nodes, links }: { nodes: Node[]; links: Li
 
     node.append('text')
       .attr('dy', 26).attr('text-anchor', 'middle')
-      .attr('fill', 'var(--text-2)').attr('font-size', '10px')
-      .attr('font-family', '-apple-system, sans-serif')
+      .attr('fill', 'var(--text-2)').attr('font-size', '9px')
+      .attr('font-family', 'var(--font-mono), monospace')
+      .attr('font-weight', 500)
       .text(d => d.name.length > 20 ? d.name.slice(0, 18) + '…' : d.name)
 
     simulation.on('tick', () => {
@@ -199,30 +200,30 @@ export default function GraphClient({ nodes, links }: { nodes: Node[]; links: Li
         <div className="graph-selected-panel" style={{
           position: 'absolute', top: '20px', right: '20px', zIndex: 10,
           background: 'var(--bg-2)', border: '1px solid var(--border-strong)',
-          borderRadius: '12px', padding: '20px', width: '280px',
+          borderRadius: 'var(--radius)', padding: '20px', width: '280px',
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
             <div>
-              <div style={{ fontWeight: 600, fontSize: '15px', marginBottom: '4px' }}>{selected.name}</div>
-              <span className={`pill pill-${selected.status}`}>{selected.status}</span>
+              <div style={{ fontWeight: 600, fontSize: '16.5px', marginBottom: '4px', fontFamily: 'var(--font-heading)' }}>{selected.name}</div>
+              <span className={`pill pill-${selected.status}`} style={{ fontFamily: 'var(--font-mono)' }}>{selected.status}</span>
             </div>
             <button onClick={() => setSelected(null)} style={{
               background: 'none', border: 'none', color: 'var(--text-3)',
               cursor: 'pointer', fontSize: '18px', lineHeight: 1,
             }}>×</button>
           </div>
-          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
+          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px', fontFamily: 'var(--font-mono)' }}>
             <span className={`pill pill-${selected.difficulty}`}>{selected.difficulty}</span>
             {selected.categories?.map(c => (
-              <span key={c} style={{ fontSize: '11px', color: 'var(--text-3)', background: 'var(--bg-4)', padding: '2px 7px', borderRadius: '4px', border: '1px solid var(--border)' }}>{c}</span>
+              <span key={c} style={{ fontSize: '11px', color: 'var(--text-3)', background: 'var(--bg-3)', padding: '2px 7px', borderRadius: '4px', border: '1px solid var(--border)' }}>{c}</span>
             ))}
           </div>
           {selected.slug && (
             <Link href={`/concepts/${selected.slug}`} style={{
-              display: 'block', textAlign: 'center', padding: '8px',
-              background: 'var(--accent)', color: '#fff', borderRadius: 'var(--radius)',
-              fontSize: '13px', fontWeight: 500,
-            }}>View concept →</Link>
+              display: 'block', textAlign: 'center', padding: '10px',
+              background: 'var(--accent)', color: 'var(--bg-1)', borderRadius: 'var(--radius)',
+              fontSize: '13.5px', fontWeight: 600, transition: 'background-color 0.2s',
+            }} className="graph-view-btn">View concept →</Link>
           )}
         </div>
       )}
@@ -306,8 +307,8 @@ export default function GraphClient({ nodes, links }: { nodes: Node[]; links: Li
           }
           .graph-mobile-btn.active {
             background: var(--accent) !important;
-            color: white !important;
-            border-color: var(--accent-2) !important;
+            color: var(--bg-1) !important;
+            border-color: var(--accent) !important;
           }
         }
       `}</style>

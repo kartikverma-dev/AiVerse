@@ -40,18 +40,20 @@ export default function ConceptsClient() {
 
   const btn = (active: boolean, label: string, onClick: () => void) => (
     <button key={label} onClick={onClick} style={{
-      padding: '5px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 500,
+      padding: '6px 14px', borderRadius: '20px', fontSize: '11px', fontWeight: 600,
       border: `1px solid ${active ? 'var(--accent-border)' : 'var(--border)'}`,
       background: active ? 'var(--accent-dim)' : 'transparent',
       color: active ? 'var(--accent)' : 'var(--text-2)', cursor: 'pointer',
+      fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.04em',
+      transition: 'all 0.2s',
     }}>{label}</button>
   )
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 24px' }}>
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '56px 24px 80px' }}>
       <div style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '32px', fontWeight: 700, marginBottom: '8px' }}>Concept library</h1>
-        <p style={{ color: 'var(--text-2)' }}>
+        <h1 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800, marginBottom: '10px', fontFamily: 'var(--font-heading)', color: 'var(--text)' }}>Concept library</h1>
+        <p style={{ color: 'var(--text-2)', fontSize: '15.5px' }}>
           {filtered.length} concept{filtered.length !== 1 ? 's' : ''} — every AI term with depth, context, and cited sources.
         </p>
       </div>

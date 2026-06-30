@@ -180,16 +180,16 @@ export default function InteractiveEvolution({ concepts }: { concepts: Concept[]
         .evolution-interactive-container {
           background: var(--bg-2);
           border: 1px solid var(--border);
-          border-radius: 16px;
-          padding: 24px;
+          border-radius: var(--radius);
+          padding: 28px;
           margin-top: 40px;
           width: 100%;
           max-width: 900px;
-          box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+          box-shadow: 0 12px 30px rgba(0,0,0,0.15);
         }
         .chain-tabs {
           display: flex;
-          gap: 8px;
+          gap: 12px;
           border-bottom: 1px solid var(--border);
           padding-bottom: 16px;
           margin-bottom: 24px;
@@ -197,19 +197,19 @@ export default function InteractiveEvolution({ concepts }: { concepts: Concept[]
           flex-wrap: wrap;
         }
         .chain-tab-btn {
-          padding: 10px 20px;
+          padding: 8px 18px;
           border-radius: 20px;
           background: transparent;
           border: 1px solid var(--border);
           color: var(--text-2);
-          font-weight: 500;
-          font-size: 14px;
+          font-weight: 600;
+          font-size: 13.5px;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.25s var(--easing);
           overflow: hidden;
         }
         .chain-tab-btn:hover {
-          border-color: var(--border-strong);
+          border-color: var(--accent);
           color: var(--text);
         }
         .chain-tab-btn.active {
@@ -228,8 +228,8 @@ export default function InteractiveEvolution({ concepts }: { concepts: Concept[]
         }
         .evolution-split-layout {
           display: grid;
-          grid-template-columns: 1fr 1.5fr;
-          gap: 28px;
+          grid-template-columns: 1fr 1.3fr;
+          gap: 32px;
           align-items: start;
         }
         @media (max-width: 768px) {
@@ -248,7 +248,6 @@ export default function InteractiveEvolution({ concepts }: { concepts: Concept[]
           flex-direction: column;
           align-items: center;
           width: 100%;
-          max-width: 320px;
         }
         .flow-step-container {
           display: flex;
@@ -260,14 +259,14 @@ export default function InteractiveEvolution({ concepts }: { concepts: Concept[]
           width: 100%;
           background: var(--bg-3);
           border: 1px solid var(--border);
-          border-radius: 12px;
+          border-radius: var(--radius);
           padding: 14px 18px;
           cursor: pointer;
           display: flex;
           align-items: center;
           gap: 12px;
           position: relative;
-          transition: all 0.2s ease;
+          transition: all 0.25s var(--easing);
         }
         .flow-node-card:hover {
           border-color: var(--border-strong);
@@ -277,7 +276,7 @@ export default function InteractiveEvolution({ concepts }: { concepts: Concept[]
         .flow-node-card.selected {
           border-color: var(--accent);
           background: var(--bg-4);
-          box-shadow: 0 0 12px var(--accent-dim);
+          box-shadow: 0 4px 20px var(--accent-dim);
         }
         .node-status-indicator {
           width: 8px;
@@ -298,6 +297,7 @@ export default function InteractiveEvolution({ concepts }: { concepts: Concept[]
           font-size: 11px;
           color: var(--text-3);
           font-weight: 500;
+          font-family: var(--font-mono);
         }
         .flow-connector {
           display: flex;
@@ -316,13 +316,14 @@ export default function InteractiveEvolution({ concepts }: { concepts: Concept[]
           font-size: 12px;
           color: var(--text-3);
           line-height: 1;
+          font-family: var(--font-mono);
         }
         .concept-preview-panel {
           background: var(--bg-3);
           border: 1px solid var(--border);
-          border-radius: 12px;
-          padding: 24px;
-          min-height: 360px;
+          border-radius: var(--radius);
+          padding: 28px;
+          min-height: 380px;
           display: flex;
           flex-direction: column;
           overflow: hidden;
@@ -336,28 +337,32 @@ export default function InteractiveEvolution({ concepts }: { concepts: Concept[]
         .preview-card-header {
           border-bottom: 1px solid var(--border);
           padding-bottom: 16px;
-          margin-bottom: 16px;
+          margin-bottom: 20px;
         }
         .header-meta {
           display: flex;
           gap: 6px;
-          margin-bottom: 8px;
+          margin-bottom: 12px;
+          font-family: var(--font-mono);
         }
         .preview-title {
-          font-size: 20px;
+          font-size: 24px;
           font-weight: 700;
           color: var(--text);
+          font-family: var(--font-heading);
+          line-height: 1.2;
         }
         .preview-abbr {
           font-weight: 400;
           color: var(--text-3);
-          font-size: 16px;
+          font-size: 18px;
+          font-family: var(--font-mono);
         }
         .preview-tldr {
-          font-size: 14px;
-          line-height: 1.5;
+          font-size: 15px;
+          line-height: 1.6;
           color: var(--text-2);
-          margin-bottom: 20px;
+          margin-bottom: 24px;
         }
         .preview-definitions {
           display: flex;
@@ -369,20 +374,21 @@ export default function InteractiveEvolution({ concepts }: { concepts: Concept[]
         .def-section {
           background: var(--bg-2);
           border: 1px solid var(--border);
-          border-radius: 8px;
-          padding: 12px 14px;
+          border-radius: var(--radius);
+          padding: 14px 16px;
         }
         .def-title {
-          font-size: 11px;
+          font-size: 10px;
           text-transform: uppercase;
-          letter-spacing: 0.05em;
-          color: var(--accent-2);
+          letter-spacing: 0.08em;
+          color: var(--accent);
           font-weight: 600;
-          margin-bottom: 4px;
+          margin-bottom: 6px;
+          font-family: var(--font-mono);
         }
         .def-text {
-          font-size: 13px;
-          line-height: 1.5;
+          font-size: 13.5px;
+          line-height: 1.65;
           color: var(--text-2);
         }
         .preview-footer {
@@ -394,17 +400,17 @@ export default function InteractiveEvolution({ concepts }: { concepts: Concept[]
           display: block;
           width: 100%;
           text-align: center;
-          padding: 10px;
+          padding: 12px;
           background: var(--accent);
-          color: white;
+          color: var(--bg-1);
           text-decoration: none;
           font-weight: 600;
-          font-size: 13px;
-          border-radius: 8px;
-          transition: background 0.2s;
+          font-size: 13.5px;
+          border-radius: var(--radius);
+          transition: background 0.25s var(--easing);
         }
         .view-full-btn:hover {
-          background: #4f46e5;
+          background: var(--accent-soft);
         }
         .empty-preview {
           display: flex;
