@@ -58,6 +58,24 @@ async function seedDigests() {
     {
       week_of: '2026-06-29',
       entry_type: 'new_concept',
+      concept_slug: 'generative-engine-optimization',
+      summary: 'Generative Engine Optimization (GEO) gains traction as search behaviors shift. Content creators are optimizing formatting and technical markup for RAG engines instead of standard SEO.'
+    },
+    {
+      week_of: '2026-06-29',
+      entry_type: 'status_change',
+      concept_slug: 'large-reasoning-models',
+      summary: 'Large Reasoning Models (LRMs) status updated to Growing with the emergence of reinforcement learning scaled models that show their work.'
+    },
+    {
+      week_of: '2026-06-29',
+      entry_type: 'new_concept',
+      concept_slug: 'agentic-commerce',
+      summary: 'Agentic Commerce enters early deployment stages, enabling autonomous AI agents to negotiate and execute B2B transactions.'
+    },
+    {
+      week_of: '2026-06-29',
+      entry_type: 'new_concept',
       concept_slug: 'agentic-rag',
       summary: 'Agentic RAG has emerged as a dominant design pattern for complex enterprise retrieval. By leveraging autonomous agent loops that perform iterative, multi-step search queries and self-correction, it bypasses the limitations of single-shot retrieval pipelines.'
     },
@@ -74,6 +92,12 @@ async function seedDigests() {
       summary: 'A new study evaluates DPO vs. PPO across a range of math and reasoning benchmarks, finding that DPO maintains equivalent alignment quality while reducing the training hardware footprint by 40%.'
     },
     // Week of 2026-06-22
+    {
+      week_of: '2026-06-22',
+      entry_type: 'new_concept',
+      concept_slug: 'rag-2-0',
+      summary: 'RAG 2.0 introduced, showing a shift from text-only pipelines to native, end-to-end multimodal retrieval architectures.'
+    },
     {
       week_of: '2026-06-22',
       entry_type: 'framework_release',

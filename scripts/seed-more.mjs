@@ -255,6 +255,66 @@ const additionalConcepts = [
     popularized_by: 'NVIDIA (NeMo Guardrails), Guardrails AI',
     categories: ['Infrastructure', 'Agents'],
     approved: true
+  },
+  {
+    slug: 'generative-engine-optimization',
+    name: 'Generative Engine Optimization',
+    abbreviation: 'GEO',
+    tldr: 'The practice of optimizing content to appear in AI-generated summaries and responses, replacing traditional SEO as users increasingly rely on AI for search results.',
+    definition_technical: 'GEO involves structuring website data and text specifically for Retrieval-Augmented Generation (RAG) and LLM search agents. Techniques include citations optimization, jargon alignment, authoritative tone adjustment, schema markup optimization, and formatting content to align with LLM embedding and tokenization models.',
+    definition_beginner: 'Just like SEO helps websites rank higher on Google search, GEO helps websites get chosen and cited by AI tools like ChatGPT, Claude, or Perplexity when users ask them questions.',
+    difficulty: 'intermediate',
+    status: 'emerging',
+    learning_priority: 'learn_now',
+    first_appeared: '2024',
+    popularized_by: 'Academic researchers, digital marketing agencies',
+    categories: ['Retrieval', 'Prompting'],
+    approved: true
+  },
+  {
+    slug: 'rag-2-0',
+    name: 'RAG 2.0',
+    abbreviation: 'RAG 2.0',
+    tldr: 'An evolution of Retrieval Augmented Generation that is native, end-to-end, and multimodal, retrieving information from diverse sources like technical drawings and audio logs, not just text.',
+    definition_technical: 'RAG 2.0 transitions from pipeline-based architectures (separate retriever and generator models) to end-to-end trained multimodal retrieval-generation networks. It performs dense retrieval directly over heterogeneous formats (documents, CAD drawings, audio clips) using joint embedding spaces, feeding multimodal context into natively multimodal LLMs.',
+    definition_beginner: 'While regular RAG can only search through text files, RAG 2.0 can search and read blueprints, listen to audio files, and watch videos to find the right answers to your questions.',
+    difficulty: 'advanced',
+    status: 'growing',
+    learning_priority: 'learn_now',
+    first_appeared: '2024',
+    popularized_by: 'Contextual AI, enterprise AI vendors',
+    categories: ['Retrieval', 'Infrastructure'],
+    approved: true
+  },
+  {
+    slug: 'large-reasoning-models',
+    name: 'Large Reasoning Models',
+    abbreviation: 'LRMs',
+    tldr: 'Models specifically designed for complex, multi-step logical thinking, planning, and showing their work.',
+    definition_technical: 'LRMs leverage reinforcement learning at scale (RL) to train the model to perform system 2 thinking (deliberate, slow reasoning). They use search algorithms (like Monte Carlo Tree Search) and generate internal hidden chains of thought to plan, backtrack, self-correct, and evaluate hypotheses before producing a response.',
+    definition_beginner: 'Instead of blurting out the first word that comes to mind, these models take a few seconds to think, plan, and double-check their math internally before giving you the final answer.',
+    difficulty: 'advanced',
+    status: 'growing',
+    learning_priority: 'learn_now',
+    first_appeared: '2024',
+    popularized_by: 'OpenAI (o1/o3 series), DeepSeek (R1 series)',
+    categories: ['Training', 'Infrastructure'],
+    approved: true
+  },
+  {
+    slug: 'agentic-commerce',
+    name: 'Agentic Commerce',
+    abbreviation: 'Agentic Commerce',
+    tldr: 'A B2B model where AI agents autonomously negotiate prices, compare products, and execute purchases between companies without human intervention.',
+    definition_technical: 'Agentic Commerce uses multi-agent orchestration to conduct automated B2B procurement. Buyer and seller agents utilize game-theory negotiation protocols, access APIs for inventory checks, evaluate SLA terms via smart contracts, and execute secure automated transactions.',
+    definition_beginner: 'Instead of employees spending days emailing suppliers to get quotes and place orders, a company\'s AI agent negotiates prices and buys products directly from a supplier\'s AI agent.',
+    difficulty: 'intermediate',
+    status: 'emerging',
+    learning_priority: 'nice_to_know',
+    first_appeared: '2025',
+    popularized_by: 'B2B AI platforms, autonomous agent developers',
+    categories: ['Agents'],
+    approved: true
   }
 ]
 
@@ -297,7 +357,13 @@ async function seed() {
     { parent: 'reinforcement-learning-from-human-feedback', child: 'direct-preference-optimization', type: 'replaced', desc: 'DPO replaces RLHF by optimizing for preferences without a separate reward model', year: 2023 },
     { parent: 'retrieval-augmented-generation', child: 'agentic-rag', type: 'extended', desc: 'Agentic RAG extends RAG with multi-step search loops and self-correction', year: 2024 },
     { parent: 'chain-of-thought-prompting', child: 'tree-of-thoughts', type: 'extended', desc: 'Tree of Thoughts expands CoT from a single line to a tree search of reasoning paths', year: 2023 },
-    { parent: 'prompt-engineering', child: 'in-context-learning', type: 'inspired_by', desc: 'Prompt engineering techniques are built on top of the in-context learning capability of LLMs', year: 2020 }
+    { parent: 'prompt-engineering', child: 'in-context-learning', type: 'inspired_by', desc: 'Prompt engineering techniques are built on top of the in-context learning capability of LLMs', year: 2020 },
+    { parent: 'retrieval-augmented-generation', child: 'rag-2-0', type: 'extended', desc: 'RAG 2.0 upgrades RAG to be end-to-end trained and natively multimodal', year: 2024 },
+    { parent: 'chain-of-thought-prompting', child: 'large-reasoning-models', type: 'extended', desc: 'LRMs build native step-by-step reasoning and hidden chains of thought directly into the model training loop', year: 2024 },
+    { parent: 'loop-engineering', child: 'agentic-commerce', type: 'inspired_by', desc: 'Agentic commerce applies autonomous multi-step execution loops to business procurement and transactions', year: 2025 },
+    { parent: 'retrieval-augmented-generation', child: 'generative-engine-optimization', type: 'extended', desc: 'GEO extends optimization strategies to retrieval-based AI search engines', year: 2024 },
+    { parent: 'knowledge-distillation', child: 'small-language-models', type: 'extended', desc: 'Knowledge distillation enables small language models to inherit reasoning capabilities from large teacher models', year: 2023 },
+    { parent: 'quantization', child: 'small-language-models', type: 'extended', desc: 'Model quantization allows small language models to fit and run efficiently on local/edge devices', year: 2023 }
   ]
 
   const evolutionsToInsert = []

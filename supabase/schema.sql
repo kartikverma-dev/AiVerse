@@ -143,7 +143,17 @@ INSERT INTO concepts (slug, name, abbreviation, tldr, definition_technical, defi
 
 ('knowledge-distillation', 'Knowledge Distillation', 'KD', 'A model compression technique where a smaller student model is trained to mimic the behavior of a larger teacher model.', 'Knowledge distillation trains a compact student model to match the soft probability distributions (logits) of a larger teacher model, rather than just hard labels. The student learns richer representations than training on ground truth alone, achieving better performance than its size would suggest.', 'Think of it like having a master expert write a textbook for students — the textbook captures not just answers but the expert''s reasoning and uncertainty, helping students learn far more efficiently than from raw data alone.', 'advanced', 'stable', 'nice_to_know', '2015', 'Hinton et al. (Google, 2015)', ARRAY['Training'], true),
 
-('multimodal-ai', 'Multimodal AI', null, 'AI systems that can understand and generate across multiple data types — text, images, audio, and video — within a single model.', 'Multimodal models process heterogeneous input modalities through separate encoders that project each modality into a shared embedding space, enabling cross-modal reasoning. Output can span modalities via specialized decoders. Examples: GPT-4o, Gemini, Claude.', 'Earlier AI was like a specialist who only spoke one language. Multimodal AI is like a polyglot who can read a document, look at a photo, listen to audio, and respond in any of those formats — all in one conversation.', 'intermediate', 'growing', 'know_basics', '2021', 'CLIP (OpenAI, 2021), scaled through GPT-4V and Gemini', ARRAY['Training','Infrastructure'], true)
+('multimodal-ai', 'Multimodal AI', null, 'AI systems that can understand and generate across multiple data types — text, images, audio, and video — within a single model.', 'Multimodal models process heterogeneous input modalities through separate encoders that project each modality into a shared embedding space, enabling cross-modal reasoning. Output can span modalities via specialized decoders. Examples: GPT-4o, Gemini, Claude.', 'Earlier AI was like a specialist who only spoke one language. Multimodal AI is like a polyglot who can read a document, look at a photo, listen to audio, and respond in any of those formats — all in one conversation.', 'intermediate', 'growing', 'know_basics', '2021', 'CLIP (OpenAI, 2021), scaled through GPT-4V and Gemini', ARRAY['Training','Infrastructure'], true),
+
+('generative-engine-optimization', 'Generative Engine Optimization', 'GEO', 'The practice of optimizing content to appear in AI-generated summaries and responses, replacing traditional SEO as users increasingly rely on AI for search results.', 'GEO involves structuring website data and text specifically for Retrieval-Augmented Generation (RAG) and LLM search agents. Techniques include citations optimization, jargon alignment, authoritative tone adjustment, schema markup optimization, and formatting content to align with LLM embedding and tokenization models.', 'Just like SEO helps websites rank higher on Google search, GEO helps websites get chosen and cited by AI tools like ChatGPT, Claude, or Perplexity when users ask them questions.', 'intermediate', 'emerging', 'learn_now', '2024', 'Academic researchers, digital marketing agencies', ARRAY['Retrieval','Prompting'], true),
+
+('small-language-models', 'Small Language Models', 'SLMs', 'Compact, efficient models designed for local deployment on devices like laptops, offering privacy and speed advantages over massive cloud-based models.', 'SLMs leverage advanced distillation, higher quality datasets (often synthetic), and architectural tricks to achieve reasoning scores close to giant models while fitting within small RAM budgets.', 'A pocket-sized dictionary that contains just the most useful words and facts. It doesn''t know everything, but it fits in your pocket and answers questions instantly without internet.', 'beginner', 'growing', 'learn_now', '2023', 'Microsoft (Phi series), Google (Gemma), Meta (Llama-3 8B)', ARRAY['Infrastructure','Agents'], true),
+
+('rag-2-0', 'RAG 2.0', 'RAG 2.0', 'An evolution of Retrieval Augmented Generation that is native, end-to-end, and multimodal, retrieving information from diverse sources like technical drawings and audio logs, not just text.', 'RAG 2.0 transitions from pipeline-based architectures (separate retriever and generator models) to end-to-end trained multimodal retrieval-generation networks. It performs dense retrieval directly over heterogeneous formats (documents, CAD drawings, audio clips) using joint embedding spaces, feeding multimodal context into natively multimodal LLMs.', 'While regular RAG can only search through text files, RAG 2.0 can search and read blueprints, listen to audio files, and watch videos to find the right answers to your questions.', 'advanced', 'growing', 'learn_now', '2024', 'Contextual AI, enterprise AI vendors', ARRAY['Retrieval','Infrastructure'], true),
+
+('large-reasoning-models', 'Large Reasoning Models', 'LRMs', 'Models specifically designed for complex, multi-step logical thinking, planning, and showing their work.', 'LRMs leverage reinforcement learning at scale (RL) to train the model to perform system 2 thinking (deliberate, slow reasoning). They use search algorithms (like Monte Carlo Tree Search) and generate internal hidden chains of thought to plan, backtrack, self-correct, and evaluate hypotheses before producing a response.', 'Instead of blurting out the first word that comes to mind, these models take a few seconds to think, plan, and double-check their math internally before giving you the final answer.', 'advanced', 'growing', 'learn_now', '2024', 'OpenAI (o1/o3 series), DeepSeek (R1 series)', ARRAY['Training','Infrastructure'], true),
+
+('agentic-commerce', 'Agentic Commerce', 'Agentic Commerce', 'A B2B model where AI agents autonomously negotiate prices, compare products, and execute purchases between companies without human intervention.', 'Agentic Commerce uses multi-agent orchestration to conduct automated B2B procurement. Buyer and seller agents utilize game-theory negotiation protocols, access APIs for inventory checks, evaluate SLA terms via smart contracts, and execute secure automated transactions.', 'Instead of employees spending days emailing suppliers to get quotes and place orders, a company''s AI agent negotiates prices and buys products directly from a supplier''s AI agent.', 'intermediate', 'emerging', 'nice_to_know', '2025', 'B2B AI platforms, autonomous agent developers', ARRAY['Agents'], true)
 
 ON CONFLICT (slug) DO NOTHING;
 
@@ -173,11 +183,45 @@ SELECT p.id, c.id, 'inspired_by', 'RAG uses vector databases as its retrieval ba
 FROM concepts p, concepts c WHERE p.slug = 'vector-database' AND c.slug = 'retrieval-augmented-generation'
 ON CONFLICT DO NOTHING;
 
+INSERT INTO concept_evolutions (parent_concept_id, child_concept_id, relationship_type, description, year)
+SELECT p.id, c.id, 'extended', 'RAG 2.0 upgrades RAG to be end-to-end trained and natively multimodal', 2024
+FROM concepts p, concepts c WHERE p.slug = 'retrieval-augmented-generation' AND c.slug = 'rag-2-0'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO concept_evolutions (parent_concept_id, child_concept_id, relationship_type, description, year)
+SELECT p.id, c.id, 'extended', 'LRMs build native step-by-step reasoning and hidden chains of thought directly into the model training loop', 2024
+FROM concepts p, concepts c WHERE p.slug = 'chain-of-thought-prompting' AND c.slug = 'large-reasoning-models'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO concept_evolutions (parent_concept_id, child_concept_id, relationship_type, description, year)
+SELECT p.id, c.id, 'inspired_by', 'Agentic commerce applies autonomous multi-step execution loops to business procurement and transactions', 2025
+FROM concepts p, concepts c WHERE p.slug = 'loop-engineering' AND c.slug = 'agentic-commerce'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO concept_evolutions (parent_concept_id, child_concept_id, relationship_type, description, year)
+SELECT p.id, c.id, 'extended', 'GEO extends optimization strategies to retrieval-based AI search engines', 2024
+FROM concepts p, concepts c WHERE p.slug = 'retrieval-augmented-generation' AND c.slug = 'generative-engine-optimization'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO concept_evolutions (parent_concept_id, child_concept_id, relationship_type, description, year)
+SELECT p.id, c.id, 'extended', 'Knowledge distillation enables small language models to inherit reasoning capabilities from large teacher models', 2023
+FROM concepts p, concepts c WHERE p.slug = 'knowledge-distillation' AND c.slug = 'small-language-models'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO concept_evolutions (parent_concept_id, child_concept_id, relationship_type, description, year)
+SELECT p.id, c.id, 'extended', 'Model quantization allows small language models to fit and run efficiently on local/edge devices', 2023
+FROM concepts p, concepts c WHERE p.slug = 'quantization' AND c.slug = 'small-language-models'
+ON CONFLICT DO NOTHING;
+
 -- Seed some digest entries
 INSERT INTO digest_entries (week_of, entry_type, summary) VALUES
 ('2026-06-23', 'new_concept', 'Loop Engineering added to the library — the emerging practice of directing autonomous AI coding agents through iterative execution loops.'),
 ('2026-06-23', 'status_change', 'RAG updated to Stable status after sustained mainstream adoption across enterprise deployments throughout 2025-2026.'),
 ('2026-06-23', 'notable_paper', 'New arXiv survey of 47 teams using AI coding agents in production finds loop-based approaches outperform one-shot generation in 89% of complex tasks.'),
 ('2026-06-16', 'new_concept', 'Context Engineering added — the discipline of architecting the full LLM context window, not just the prompt.'),
-('2026-06-16', 'framework_release', 'MCP (Model Context Protocol) ecosystem reaches 500+ community-built servers, cementing its role as the standard agent-tool interface.')
+('2026-06-16', 'framework_release', 'MCP (Model Context Protocol) ecosystem reaches 500+ community-built servers, cementing its role as the standard agent-tool interface.'),
+('2026-06-29', 'new_concept', 'Generative Engine Optimization (GEO) added to track how creators optimize content to appear in AI-generated summaries and responses.'),
+('2026-06-22', 'new_concept', 'RAG 2.0 introduced, showing a shift from text-only pipelines to native, end-to-end multimodal retrieval architectures.'),
+('2026-06-29', 'status_change', 'Large Reasoning Models (LRMs) status updated to Growing with the emergence of reinforcement learning scaled models that show their work.'),
+('2026-06-29', 'new_concept', 'Agentic Commerce enters early deployment stages, enabling autonomous AI agents to negotiate and execute B2B transactions.')
 ON CONFLICT DO NOTHING;
