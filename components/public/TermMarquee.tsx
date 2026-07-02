@@ -4,7 +4,8 @@ const ROW_1 = ['Transformer Architecture', 'Chain-of-Thought', 'Model Context Pr
 const ROW_2 = ['Agentic Loops', 'Constitutional AI', 'Vector Embeddings', 'Prompt Engineering', 'Tool Use', 'Context Windows', 'Vibe Coding']
 
 function Row({ terms, reverse, speed }: { terms: string[]; reverse?: boolean; speed: number }) {
-  const items = [...terms, ...terms]
+  // Duplicate terms enough times to span ultra-wide laptop screens
+  const items = Array(12).fill(terms).flat()
 
   return (
     <div style={{ overflow: 'hidden', width: '100%' }}>
