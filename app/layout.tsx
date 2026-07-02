@@ -1,5 +1,9 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { getConcepts } from '@/lib/db'
+import FlashcardModal from '@/components/public/FlashcardModal'
+
+export const revalidate = 60
 
 export const metadata: Metadata = {
   title: 'AiVerse — Track the Evolution of AI Ideas',
@@ -12,7 +16,9 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const allConcepts = await getConcepts({ approved: true })
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -25,7 +31,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           })()
         `}} />
       </head>
-      <body>{children}</body>
+      <body>
+        <FlashcardModal concepts={allConcepts} />
+        {children}
+      </body>
     </html>
   )
 }

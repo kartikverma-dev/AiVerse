@@ -7,7 +7,6 @@ import TermMarquee from '@/components/public/TermMarquee'
 import FeatureBento from '@/components/public/FeatureBento'
 import AnimatedSections from '@/components/public/AnimatedSections'
 import CtaFooter from '@/components/public/CtaFooter'
-import FlashcardModal from '@/components/public/FlashcardModal'
 
 export const revalidate = 60
 
@@ -43,7 +42,6 @@ export default async function Home() {
   return (
     <>
       <Nav />
-      <FlashcardModal concepts={allConcepts} />
       <main style={{ position: 'relative', overflowX: 'hidden', background: 'var(--bg)', color: 'var(--text)' }}>
 
         {/* Cinematic 3D hero — crystal centerpiece, stacked editorial type */}
