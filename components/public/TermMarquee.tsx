@@ -4,33 +4,40 @@ const ROW_1 = ['Transformer Architecture', 'Chain-of-Thought', 'Model Context Pr
 const ROW_2 = ['Agentic Loops', 'Constitutional AI', 'Vector Embeddings', 'Prompt Engineering', 'Tool Use', 'Context Windows', 'Vibe Coding']
 
 function Row({ terms, reverse, speed }: { terms: string[]; reverse?: boolean; speed: number }) {
-  // Duplicate terms enough times to span ultra-wide laptop screens
-  const items = Array(12).fill(terms).flat()
+  // Duplicate terms enough times to ensure one block spans across ultra-wide monitors
+  const blockTerms = Array(4).fill(terms).flat()
+
+  const renderBlock = (isClone: boolean) => (
+    <div style={{ display: 'flex', gap: '14px', paddingRight: '14px' }} aria-hidden={isClone}>
+      {blockTerms.map((term, i) => (
+        <span key={isClone ? `clone-${i}` : i} style={{
+          display: 'inline-flex', alignItems: 'center', gap: '8px',
+          padding: '9px 18px',
+          background: 'var(--bg-2)',
+          border: '1px solid var(--border)',
+          borderRadius: '24px',
+          fontSize: '13px', color: 'var(--text-2)',
+          fontWeight: 500, whiteSpace: 'nowrap',
+        }}>
+          <span style={{
+            width: '5px', height: '5px', borderRadius: '50%',
+            background: i % 3 === 0 ? 'var(--accent)' : i % 3 === 1 ? 'var(--success)' : 'var(--stable)',
+            flexShrink: 0,
+          }} />
+          {term}
+        </span>
+      ))}
+    </div>
+  )
 
   return (
-    <div style={{ overflow: 'hidden', width: '100%' }}>
+    <div style={{ overflow: 'hidden', width: '100%', display: 'flex' }}>
       <div 
         className={reverse ? "marquee-track-rtl" : "marquee-track-ltr"}
-        style={{ '--speed': `${speed}s` } as React.CSSProperties}
+        style={{ '--speed': `${speed}s`, display: 'flex' } as React.CSSProperties}
       >
-        {items.map((term, i) => (
-          <span key={i} style={{
-            display: 'inline-flex', alignItems: 'center', gap: '8px',
-            padding: '9px 18px',
-            background: 'var(--bg-2)',
-            border: '1px solid var(--border)',
-            borderRadius: '24px',
-            fontSize: '13px', color: 'var(--text-2)',
-            fontWeight: 500, whiteSpace: 'nowrap',
-          }}>
-            <span style={{
-              width: '5px', height: '5px', borderRadius: '50%',
-              background: i % 3 === 0 ? 'var(--accent)' : i % 3 === 1 ? 'var(--success)' : 'var(--stable)',
-              flexShrink: 0,
-            }} />
-            {term}
-          </span>
-        ))}
+        {renderBlock(false)}
+        {renderBlock(true)}
       </div>
     </div>
   )
