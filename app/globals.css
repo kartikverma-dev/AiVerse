@@ -224,37 +224,9 @@ a { color: inherit; text-decoration: none; }
   }
 }
 
-/* CSS Marquee Animation */
-@keyframes marquee-ltr {
-  0% { transform: translate3d(0, 0, 0); }
-  100% { transform: translate3d(-50%, 0, 0); }
-}
-@keyframes marquee-rtl {
-  0% { transform: translate3d(-50%, 0, 0); }
-  100% { transform: translate3d(0, 0, 0); }
-}
-.marquee-track-ltr {
-  display: flex;
-  gap: 14px;
-  width: max-content;
-  animation: marquee-ltr var(--speed) linear infinite;
-}
-.marquee-track-rtl {
-  display: flex;
-  gap: 14px;
-  width: max-content;
-  animation: marquee-rtl var(--speed) linear infinite;
-}
-.marquee-track-ltr:hover, .marquee-track-rtl:hover {
-  animation-play-state: paused;
-}
-
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
-  }
-  .marquee-track-ltr, .marquee-track-rtl {
-    animation: none !important;
   }
 }

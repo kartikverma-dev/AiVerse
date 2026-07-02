@@ -3,6 +3,8 @@
 const ROW_1 = ['Transformer Architecture', 'Chain-of-Thought', 'Model Context Protocol', 'RAG Pipelines', 'Mixture of Experts', 'RLHF']
 const ROW_2 = ['Agentic Loops', 'Constitutional AI', 'Vector Embeddings', 'Prompt Engineering', 'Tool Use', 'Context Windows', 'Vibe Coding']
 
+import { motion } from 'framer-motion'
+
 function Row({ terms, reverse, speed }: { terms: string[]; reverse?: boolean; speed: number }) {
   // Duplicate terms enough times to ensure one block spans across ultra-wide monitors
   const blockTerms = Array(4).fill(terms).flat()
@@ -31,17 +33,19 @@ function Row({ terms, reverse, speed }: { terms: string[]; reverse?: boolean; sp
   )
 
   return (
-    <div style={{ overflow: 'hidden', width: '100%', display: 'flex' }}>
-      <div 
-        className={reverse ? "marquee-track-rtl" : "marquee-track-ltr"}
-        style={{ '--speed': `${speed}s`, display: 'flex' } as React.CSSProperties}
+    <div style={{ overflow: 'hidden', width: '100%' }}>
+      <motion.div 
+        animate={{ x: reverse ? ['-50%', '0%'] : ['0%', '-50%'] }}
+        transition={{ repeat: Infinity, ease: 'linear', duration: speed }}
+        style={{ display: 'flex', width: 'max-content' }}
       >
         {renderBlock(false)}
         {renderBlock(true)}
-      </div>
+      </motion.div>
     </div>
   )
 }
+
 
 export default function TermMarquee() {
   return (
