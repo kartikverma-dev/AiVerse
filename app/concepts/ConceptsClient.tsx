@@ -76,13 +76,13 @@ export default function ConceptsClient() {
       </div>
 
       {/* Filters */}
-      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '12px' }}>
+      <div className="filter-row" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '12px' }}>
         {STATUS_FILTERS.map(s => btn(status === s, s === 'all' ? 'All status' : s, () => setStatus(s)))}
       </div>
-      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '12px' }}>
+      <div className="filter-row" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '12px' }}>
         {CATEGORY_FILTERS.map(c => btn(category === c, c, () => setCategory(c)))}
       </div>
-      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '32px' }}>
+      <div className="filter-row" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '32px' }}>
         {PRIORITY_FILTERS.map(p => btn(priority === p, PRIORITY_LABELS[p], () => setPriority(p)))}
       </div>
 
@@ -101,11 +101,30 @@ export default function ConceptsClient() {
           </button>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 340px), 1fr))', gap: '16px' }}>
           {filtered.map(c => <ConceptCard key={c.id} concept={c} />)}
         </div>
       )}
-      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @media (max-width: 600px) {
+          .filter-row {
+            display: flex !important;
+            flex-wrap: nowrap !important;
+            overflow-x: auto !important;
+            padding-bottom: 8px !important;
+            margin-bottom: 12px !important;
+            scrollbar-width: none !important;
+            width: calc(100% + 48px) !important;
+            margin-left: -24px !important;
+            padding-left: 24px !important;
+            padding-right: 24px !important;
+          }
+          .filter-row::-webkit-scrollbar {
+            display: none !important;
+          }
+        }
+      `}</style>
     </div>
   )
 }

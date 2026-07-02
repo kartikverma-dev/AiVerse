@@ -47,16 +47,16 @@
 }
 
 [data-theme='light'] {
-  --bg: #fcfaf7;
+  --bg: #FAF8F5; /* Premium warm plaster background */
   --bg-1: #ffffff;
-  --bg-2: #f8f6f0;
-  --bg-3: #f1ede2;
-  --bg-4: #e7e2d3;
-  --border: rgba(178, 138, 38, 0.12);
-  --border-strong: rgba(178, 138, 38, 0.25);
-  --text: #1c1a17;
-  --text-2: #6b645b;
-  --text-3: #8a8277;
+  --bg-2: #ffffff; /* Clean white card surfaces */
+  --bg-3: #F1EDE4; /* Slightly darker cream for nested/hover states */
+  --bg-4: #E5DDD0; /* More contrast cream/gray */
+  --border: rgba(178, 138, 38, 0.15); /* More visible warm gold border */
+  --border-strong: rgba(178, 138, 38, 0.28);
+  --text: #1E1C18; /* Rich charcoal brown */
+  --text-2: #6B6457; /* Muted gray brown */
+  --text-3: #948C7E; /* Faded caption/label brown */
   --accent: #b28a26;
   --accent-2: #246b43;
   --accent-soft: #c89b3c;
@@ -72,15 +72,15 @@
   --historical: #8a8277;
   
   /* Themeable components */
-  --nav-bg: rgba(252, 250, 247, 0.85);
-  --hero-bg: radial-gradient(ellipse 80% 60% at 50% 30%, #f6f2e8 0%, #fcfaf7 80%);
+  --nav-bg: rgba(250, 248, 245, 0.85);
+  --hero-bg: radial-gradient(ellipse 80% 60% at 50% 30%, #F5F1E6 0%, #FAF8F5 80%);
   --hero-orb-1: rgba(178, 138, 38, 0.05);
   --hero-orb-2: rgba(36, 107, 67, 0.03);
   --hero-badge-bg: rgba(178, 138, 38, 0.04);
   --hero-badge-border: rgba(178, 138, 38, 0.15);
-  --glass-bg: rgba(252, 250, 247, 0.6);
+  --glass-bg: rgba(250, 248, 245, 0.6);
   --line-opacity: 0.15;
-  --cta-bg: linear-gradient(135deg, #ffffff 0%, #fcfaf7 100%);
+  --cta-bg: linear-gradient(135deg, #ffffff 0%, #FAF8F5 100%);
   --cta-text: var(--text);
   --cta-text-2: var(--text-2);
   --cta-border: var(--border-strong);

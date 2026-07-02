@@ -48,7 +48,7 @@ export default async function Home() {
         <HeroSection totalCount={totalCount} />
 
         {/* Scroll-driven particle burst revealing key stats */}
-        <ParticleBurst />
+        <ParticleBurst totalCount={totalCount} />
 
         <TermMarquee />
 

@@ -104,7 +104,7 @@ function ConceptsManager() {
               </div>
             ) : (
               concepts.map((c, i) => (
-                <div key={c.id} style={{
+                <div key={c.id} className="admin-concept-item" style={{
                   display: 'flex', alignItems: 'center', gap: '12px',
                   padding: '14px 20px',
                   borderBottom: i < concepts.length - 1 ? '1px solid var(--border)' : 'none',
@@ -141,7 +141,22 @@ function ConceptsManager() {
           </div>
         </div>
       </main>
-      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @media (max-width: 600px) {
+          .admin-concept-item {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 8px !important;
+            padding: 16px !important;
+          }
+          .admin-concept-item > div:last-child {
+            width: 100% !important;
+            justify-content: flex-start !important;
+            margin-top: 8px !important;
+          }
+        }
+      `}</style>
     </div>
   )
 }

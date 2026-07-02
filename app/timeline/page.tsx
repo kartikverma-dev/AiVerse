@@ -62,7 +62,7 @@ export default async function TimelinePage() {
         </Link>
 
         {children.length > 0 && (
-          <div style={{ marginLeft: '24px', paddingLeft: '24px', borderLeft: '1px solid var(--border)', marginTop: '0' }}>
+          <div className="timeline-child-wrapper">
             {children.map((ev, idx) => (
               <div key={`${ev.parent_concept_id}-${ev.child_concept_id}-${idx}`} style={{ marginTop: '8px' }}>
                 <div style={{
@@ -171,6 +171,23 @@ export default async function TimelinePage() {
           border-color: var(--accent);
           background: var(--bg-3);
           color: var(--text);
+        }
+        .timeline-child-wrapper {
+          margin-left: 24px;
+          padding-left: 24px;
+          border-left: 1px solid var(--border);
+          margin-top: 0;
+        }
+        @media (max-width: 600px) {
+          .timeline-child-wrapper {
+            margin-left: 12px !important;
+            padding-left: 12px !important;
+          }
+          .timeline-card {
+            min-width: 100% !important;
+            width: 100% !important;
+            padding: 10px 14px !important;
+          }
         }
       `}</style>
     </>

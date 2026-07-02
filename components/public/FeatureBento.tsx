@@ -149,6 +149,7 @@ export default function FeatureBento() {
               variants={fadeUp}
               whileHover={{ y: -4, borderColor: 'var(--accent-border)' }}
               transition={{ duration: 0.25 }}
+              className="bento-card"
               style={{
                 position: 'relative', overflow: 'hidden',
                 background: 'var(--bg-2)', border: '1px solid var(--border)',
@@ -187,6 +188,7 @@ export default function FeatureBento() {
         @media (max-width: 800px) {
           .bento-grid { grid-template-columns: 1fr !important; }
           .bento-grid > a { grid-column: span 1 !important; }
+          .bento-card { height: auto !important; min-height: 220px !important; padding: 20px !important; }
         }
       `}</style>
     </section>

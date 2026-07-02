@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getConcepts, createConceptFromDraft, approveConcept, deleteConcept, updateConcept } from '@/lib/db'
+import { revalidatePath } from 'next/cache'
 
 export async function GET(req: NextRequest) {
   try {
@@ -35,16 +36,31 @@ export async function POST(req: NextRequest) {
 
     if (action === 'approve') {
       await approveConcept(id)
+      revalidatePath('/')
+      revalidatePath('/concepts')
+      revalidatePath('/graph')
+      revalidatePath('/timeline')
+      revalidatePath('/concepts/[slug]', 'page')
       return NextResponse.json({ ok: true })
     }
 
     if (action === 'delete') {
       await deleteConcept(id)
+      revalidatePath('/')
+      revalidatePath('/concepts')
+      revalidatePath('/graph')
+      revalidatePath('/timeline')
+      revalidatePath('/concepts/[slug]', 'page')
       return NextResponse.json({ ok: true })
     }
 
     if (action === 'update') {
       await updateConcept(id, updates)
+      revalidatePath('/')
+      revalidatePath('/concepts')
+      revalidatePath('/graph')
+      revalidatePath('/timeline')
+      revalidatePath('/concepts/[slug]', 'page')
       return NextResponse.json({ ok: true })
     }
 

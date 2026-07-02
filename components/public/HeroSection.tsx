@@ -145,7 +145,7 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
 
         {/* Premium editorial headline */}
         <h1 style={{
-          fontSize: 'clamp(44px, 8.5vw, 92px)',
+          fontSize: 'clamp(32px, 8.5vw, 92px)',
           fontWeight: 800,
           lineHeight: 1.05,
           letterSpacing: '-0.03em',
@@ -209,6 +209,7 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
         {/* Upgraded Dashboard Cards Section */}
         <motion.div 
           variants={stagger.item}
+          className="hero-dashboard-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
@@ -222,6 +223,7 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
           <motion.div
             onClick={() => setActiveCard(activeCard === 0 ? null : 0)}
             whileHover={{ y: -6, borderColor: 'var(--accent-border)', background: 'var(--bg-2)' }}
+            className="hero-card"
             style={{
               padding: '24px',
               borderRadius: 'var(--radius)',
@@ -282,6 +284,7 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
           <motion.div
             onClick={() => setActiveCard(activeCard === 1 ? null : 1)}
             whileHover={{ y: -6, borderColor: 'var(--accent-border)', background: 'var(--bg-2)' }}
+            className="hero-card"
             style={{
               padding: '24px',
               borderRadius: 'var(--radius)',
@@ -327,6 +330,7 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
           <motion.div
             onClick={() => setActiveCard(activeCard === 2 ? null : 2)}
             whileHover={{ y: -6, borderColor: 'var(--accent-border)', background: 'var(--bg-2)' }}
+            className="hero-card"
             style={{
               padding: '24px',
               borderRadius: 'var(--radius)',
@@ -386,6 +390,29 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
           75%, 100% {
             transform: scale(2);
             opacity: 0;
+          }
+        }
+        @media (max-width: 768px) {
+          .hero-dashboard-grid {
+            display: flex !important;
+            overflow-x: auto !important;
+            scroll-snap-type: x mandatory !important;
+            padding: 8px 16px 20px !important;
+            margin-top: 16px !important;
+            gap: 16px !important;
+            width: calc(100% + 48px) !important;
+            margin-left: -24px !important;
+            scrollbar-width: none !important;
+          }
+          .hero-dashboard-grid::-webkit-scrollbar {
+            display: none !important;
+          }
+          .hero-card {
+            min-width: 280px !important;
+            max-width: 280px !important;
+            flex-shrink: 0 !important;
+            scroll-snap-align: center !important;
+            padding: 16px !important;
           }
         }
       `}</style>

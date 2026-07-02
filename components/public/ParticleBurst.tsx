@@ -25,11 +25,7 @@ function seededParticles(count: number) {
 
 const PARTICLES = seededParticles(60)
 
-const STATS = [
-  { value: 31, suffix: '+', label: 'Concepts mapped' },
-  { value: 5, suffix: '', label: 'Status levels' },
-  { value: 100, suffix: '%', label: 'Cited sources' },
-]
+
 
 function CountUp({ target, suffix, active }: { target: number; suffix: string; active: boolean }) {
   const [val, setVal] = useState(0)
@@ -51,9 +47,15 @@ function CountUp({ target, suffix, active }: { target: number; suffix: string; a
   return <span>{val}{suffix}</span>
 }
 
-export default function ParticleBurst() {
+export default function ParticleBurst({ totalCount = 31 }: { totalCount?: number }) {
   const ref = useRef<HTMLDivElement>(null)
   const [inView, setInView] = useState(false)
+
+  const stats = [
+    { value: totalCount, suffix: '+', label: 'Concepts mapped' },
+    { value: 5, suffix: '', label: 'Status levels' },
+    { value: 100, suffix: '%', label: 'Cited sources' },
+  ]
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -80,8 +82,8 @@ export default function ParticleBurst() {
   }, [])
 
   return (
-    <section ref={ref} style={{
-      position: 'relative', minHeight: '120vh',
+    <section ref={ref} className="particle-burst-section" style={{
+      position: 'relative',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       background: 'var(--bg)', overflow: 'hidden',
     }}>
@@ -126,7 +128,7 @@ export default function ParticleBurst() {
           The numbers behind the map
         </div>
         <div style={{ display: 'flex', gap: 'clamp(32px, 6vw, 80px)', justifyContent: 'center', flexWrap: 'wrap' }}>
-          {STATS.map((s, i) => (
+          {stats.map((s, i) => (
             <div key={i}>
               <div style={{
                 fontSize: 'clamp(40px, 6vw, 64px)', fontWeight: 800,
@@ -143,8 +145,12 @@ export default function ParticleBurst() {
       </motion.div>
 
       <style>{`
+        .particle-burst-section { min-height: 120vh; }
+        @media (max-width: 768px) {
+          .particle-burst-section { min-height: 60vh !important; padding: 80px 24px !important; }
+        }
         @media (prefers-reduced-motion: reduce) {
-          section { min-height: auto !important; padding: 80px 24px; }
+          .particle-burst-section { min-height: auto !important; padding: 80px 24px !important; }
         }
       `}</style>
     </section>

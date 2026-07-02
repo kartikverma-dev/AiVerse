@@ -115,7 +115,9 @@ export default function Nav() {
         onClick={() => setMenuOpen(!menuOpen)}
         style={{
           background: 'none', border: 'none', cursor: 'pointer',
-          padding: '6px', color: 'var(--text)',
+          width: '44px', height: '44px', display: 'flex',
+          alignItems: 'center', justifyContent: 'center',
+          color: 'var(--text)',
         }}
         className="mobile-menu-btn"
         aria-label="Toggle mobile menu"
@@ -129,17 +131,19 @@ export default function Nav() {
           position: 'fixed', top: '56px', left: 0, right: 0,
           background: 'var(--bg-1)',
           borderBottom: '1px solid var(--border-strong)',
-          padding: '24px', display: 'flex', flexDirection: 'column',
+          padding: '24px 24px calc(24px + env(safe-area-inset-bottom, 0px))',
+          display: 'flex', flexDirection: 'column',
           gap: '16px', zIndex: 89,
           boxShadow: '0 10px 20px rgba(0,0,0,0.15)',
         }} className="mobile-menu">
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {links.map(l => (
               <Link key={l.href} href={l.href} onClick={() => setMenuOpen(false)} style={{
-                padding: '10px 14px', borderRadius: 'var(--radius)',
+                padding: '12px 14px', borderRadius: 'var(--radius)',
                 fontSize: '16px', fontWeight: 600,
                 color: path?.startsWith(l.href) ? 'var(--text)' : 'var(--text-2)',
                 background: path?.startsWith(l.href) ? 'var(--bg-3)' : 'transparent',
+                display: 'block', minHeight: '44px',
               }}>{l.label}</Link>
             ))}
           </div>
@@ -154,7 +158,7 @@ export default function Nav() {
                 padding: '12px 14px', borderRadius: 'var(--radius)',
                 color: 'var(--text)', display: 'flex', alignItems: 'center', gap: '10px',
                 fontSize: '15px', fontWeight: 600, cursor: 'pointer',
-                textAlign: 'left',
+                textAlign: 'left', minHeight: '44px',
               }}
             >
               <BookOpen size={18} />
@@ -168,7 +172,7 @@ export default function Nav() {
                 padding: '12px 14px', borderRadius: 'var(--radius)',
                 color: 'var(--text)', display: 'flex', alignItems: 'center', gap: '10px',
                 fontSize: '15px', fontWeight: 600, cursor: 'pointer',
-                textAlign: 'left',
+                textAlign: 'left', minHeight: '44px',
               }}
             >
               {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
@@ -179,7 +183,8 @@ export default function Nav() {
               padding: '12px 14px', borderRadius: 'var(--radius)',
               background: 'var(--bg-3)', border: '1px solid var(--border-strong)',
               fontSize: '15px', fontWeight: 600, color: 'var(--text)',
-              display: 'flex', justifyContent: 'center',
+              display: 'flex', justifyContent: 'center', alignItems: 'center',
+              minHeight: '44px',
             }}>Admin Dashboard</Link>
           </div>
         </div>

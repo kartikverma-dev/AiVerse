@@ -144,7 +144,7 @@ export default async function ConceptPage({ params }: { params: Promise<{ slug: 
           </section>
 
           {/* Beginner explanation */}
-          <section style={{
+          <section className="beginner-explanation-panel" style={{
             marginBottom: '44px', background: 'var(--bg-2)',
             border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '28px',
           }}>
@@ -197,7 +197,7 @@ export default async function ConceptPage({ params }: { params: Promise<{ slug: 
                         fontFamily: 'var(--font-mono)',
                       }}>{src.authority_rank}</div>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: '14px', fontWeight: 600, marginBottom: '2px', color: 'var(--text)' }}>{src.title || src.url}</div>
+                        <div style={{ fontSize: '14px', fontWeight: 600, marginBottom: '2px', color: 'var(--text)', wordBreak: 'break-word' }}>{src.title || src.url}</div>
                         <div style={{ fontSize: '11px', color: 'var(--text-3)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{sourceTypeLabel[src.source_type] || src.source_type}</div>
                       </div>
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-3)" strokeWidth="2" style={{ flexShrink: 0 }}>
@@ -244,6 +244,15 @@ export default async function ConceptPage({ params }: { params: Promise<{ slug: 
         }
         .back-link-btn:hover {
           color: var(--accent) !important;
+        }
+        @media (max-width: 600px) {
+          .beginner-explanation-panel {
+            padding: 16px !important;
+          }
+          .source-card {
+            padding: 12px 16px !important;
+            gap: 10px !important;
+          }
         }
       `}</style>
     </>

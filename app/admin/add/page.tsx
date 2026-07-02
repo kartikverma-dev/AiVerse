@@ -182,7 +182,7 @@ export default function AdminAddPage() {
 
               <div style={{ background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: '12px', padding: '24px' }}>
                 {/* Name + Abbreviation */}
-                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '12px' }}>
+                <div className="admin-name-row" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '12px' }}>
                   {field('Concept name *', undefined,
                     <input value={draft.name || ''} onChange={e => setDraft({ ...draft, name: e.target.value })} style={inputStyle} />
                   )}
@@ -295,7 +295,14 @@ export default function AdminAddPage() {
           )}
         </div>
       </main>
-      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @media (max-width: 500px) {
+          .admin-name-row {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </div>
   )
 }

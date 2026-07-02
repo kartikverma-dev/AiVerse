@@ -166,6 +166,21 @@ export default async function DigestPage() {
         .digest-card .pill:hover {
           transform: scale(1.04);
         }
+        @media (max-width: 600px) {
+          .digest-timeline {
+            padding-left: 16px !important;
+            margin-left: 0 !important;
+          }
+          .digest-week-dot {
+            left: -24px !important;
+            width: 14px !important;
+            height: 14px !important;
+            border-width: 3px !important;
+          }
+          .digest-card {
+            padding: 16px !important;
+          }
+        }
       `}</style>
     </>
   )

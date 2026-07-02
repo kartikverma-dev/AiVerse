@@ -65,8 +65,9 @@ export default async function AdminDashboard() {
                 <div key={c.id} style={{
                   padding: '14px 20px', borderBottom: '1px solid var(--border)',
                   display: 'flex', alignItems: 'center', gap: '12px',
+                  flexWrap: 'wrap',
                 }}>
-                  <div style={{ flex: 1 }}>
+                  <div style={{ flex: 1, minWidth: '200px' }}>
                     <div style={{ fontWeight: 500, fontSize: '14px' }}>{c.name}</div>
                     <div style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '2px' }}>AI-drafted · pending your approval</div>
                   </div>

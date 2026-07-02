@@ -96,30 +96,32 @@ export default function FlashcardModal({ concepts }: FlashcardModalProps) {
           <button
             onClick={() => setIsOpen(false)}
             style={{
-              position: 'absolute',
-              top: '-48px',
-              right: '0',
+              position: 'fixed',
+              top: '16px',
+              right: '16px',
               background: 'var(--bg-2)',
               border: '1px solid var(--border-strong)',
               borderRadius: '50%',
-              width: '36px',
-              height: '36px',
+              width: '44px',
+              height: '44px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
               color: 'var(--text-2)',
-              transition: 'color 0.2s',
+              transition: 'color 0.2s, background-color 0.2s',
+              zIndex: 110,
             }}
             onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text)'}
             onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-2)'}
             aria-label="Close modal"
           >
-            <X size={18} />
+            <X size={20} />
           </button>
 
           {/* 3D Flashcard Section */}
           <div 
+            className="flashcard-container"
             style={{
               perspective: '1200px',
               width: '100%',
@@ -141,6 +143,7 @@ export default function FlashcardModal({ concepts }: FlashcardModalProps) {
             >
               {/* CARD FRONT FACE */}
               <div
+                className="flashcard-face"
                 style={{
                   position: 'absolute',
                   inset: 0,
@@ -177,7 +180,7 @@ export default function FlashcardModal({ concepts }: FlashcardModalProps) {
                 </div>
 
                 {/* Main Concept display */}
-                <div style={{ textAlign: 'center', margin: '40px 0', position: 'relative', zIndex: 1 }}>
+                <div className="flashcard-body" style={{ textAlign: 'center', margin: '40px 0', position: 'relative', zIndex: 1 }}>
                   <h3 style={{
                     fontSize: 'clamp(28px, 6vw, 36px)',
                     fontWeight: 800,
@@ -217,6 +220,7 @@ export default function FlashcardModal({ concepts }: FlashcardModalProps) {
 
               {/* CARD BACK FACE */}
               <div
+                className="flashcard-face"
                 style={{
                   position: 'absolute',
                   inset: 0,
@@ -315,7 +319,7 @@ export default function FlashcardModal({ concepts }: FlashcardModalProps) {
           </div>
 
           {/* Quick instructions underneath */}
-          <div style={{ fontSize: '12.5px', color: 'var(--text-2)', textAlign: 'center' }}>
+          <div style={{ fontSize: '12.5px', color: 'var(--text-2)', textAlign: 'center', marginBottom: '8px' }}>
             <span>Stuck? Click card to flip. Or </span>
             <button 
               onClick={() => setIsOpen(false)} 
@@ -324,6 +328,20 @@ export default function FlashcardModal({ concepts }: FlashcardModalProps) {
               Skip to site
             </button>
           </div>
+
+          <style>{`
+            @media (max-height: 700px) or (max-width: 480px) {
+              .flashcard-container {
+                height: 380px !important;
+              }
+              .flashcard-face {
+                padding: 20px !important;
+              }
+              .flashcard-body {
+                margin: 20px 0 !important;
+              }
+            }
+          `}</style>
         </motion.div>
       </div>
     </AnimatePresence>

@@ -233,8 +233,22 @@ export default function InteractiveEvolution({ concepts }: { concepts: Concept[]
           align-items: start;
         }
         @media (max-width: 768px) {
+          .evolution-interactive-container {
+            padding: 16px !important;
+            margin-top: 24px !important;
+          }
+          .chain-tabs {
+            gap: 6px !important;
+            padding-bottom: 12px !important;
+            margin-bottom: 16px !important;
+          }
+          .chain-tab-btn {
+            padding: 6px 12px !important;
+            font-size: 12px !important;
+          }
           .evolution-split-layout {
             grid-template-columns: 1fr;
+            gap: 20px !important;
           }
         }
         .lineage-flow-panel {
