@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
-import ConceptCard from '@/components/public/ConceptCard'
+import { useRouter } from 'next/navigation'
+import { ConceptCardV2 } from '@/components/ConceptCardV2'
 import type { Concept } from '@/types'
 
 const STATUS_FILTERS = ['all', 'emerging', 'growing', 'stable', 'declining', 'historical']
@@ -9,6 +10,7 @@ const PRIORITY_FILTERS = ['all', 'learn_now', 'know_basics', 'nice_to_know']
 const PRIORITY_LABELS: Record<string, string> = { all: 'All priorities', learn_now: 'Learn now', know_basics: 'Know basics', nice_to_know: 'Nice to know' }
 
 export default function ConceptsClient() {
+  const router = useRouter()
   const [concepts, setConcepts] = useState<Concept[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -101,8 +103,14 @@ export default function ConceptsClient() {
           </button>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 340px), 1fr))', gap: '16px' }}>
-          {filtered.map(c => <ConceptCard key={c.id} concept={c} />)}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filtered.map(c => (
+            <ConceptCardV2 
+              key={c.id} 
+              concept={c} 
+              onClick={(slug) => router.push(`/concepts/${slug}`)} 
+            />
+          ))}
         </div>
       )}
       <style>{`
