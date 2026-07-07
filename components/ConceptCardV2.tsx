@@ -145,13 +145,29 @@ export const ConceptCardV2: React.FC<ConceptCardV2Props> = ({
     return (hash % 12) * 15 + 5; // 5 to 185 papers
   };
 
+  const getStatusHoverStyles = (status: string) => {
+    switch (status) {
+      case 'emerging':
+        return 'hover:border-emerald-500/30 hover:shadow-[0_0_25px_rgba(16,185,129,0.08)]';
+      case 'growing':
+        return 'hover:border-signal-gold/30 hover:shadow-[0_0_25px_rgba(217,168,92,0.08)]';
+      case 'stable':
+        return 'hover:border-contrast-violet/30 hover:shadow-[0_0_25px_rgba(139,124,246,0.08)]';
+      case 'declining':
+        return 'hover:border-rose-500/30 hover:shadow-[0_0_25px_rgba(239,68,68,0.08)]';
+      case 'historical':
+      default:
+        return 'hover:border-neutral-500/30 hover:shadow-[0_0_25px_rgba(156,163,175,0.08)]';
+    }
+  };
+
   return (
     <motion.div
       variants={cardHover}
       initial="initial"
       whileHover="hover"
       onClick={() => onClick && onClick(concept.slug)}
-      className={`group relative flex flex-col justify-between p-6 rounded-xl border border-white/10 bg-white/[0.02] hover:border-white/20 transition-colors duration-300 cursor-pointer overflow-hidden ${className}`}
+      className={`group relative flex flex-col justify-between p-6 rounded-xl border border-white/10 bg-zinc-950/40 backdrop-blur-md transition-all duration-300 cursor-pointer overflow-hidden ${getStatusHoverStyles(concept.status)} ${className}`}
     >
       {/* Background card accent glow on hover */}
       <div className="absolute inset-0 z-0 bg-gradient-to-br from-white/[0.01] to-transparent group-hover:from-white/[0.03] transition-all duration-300 pointer-events-none" />
@@ -178,7 +194,7 @@ export const ConceptCardV2: React.FC<ConceptCardV2Props> = ({
         </h3>
 
         {/* TLDR */}
-        <p className="relative z-10 text-xs text-neutral-400 font-sans mb-4 italic leading-relaxed">
+        <p className="relative z-10 text-[12.5px] text-neutral-300 font-sans mb-4 leading-relaxed">
           {concept.tldr}
         </p>
 
@@ -186,20 +202,20 @@ export const ConceptCardV2: React.FC<ConceptCardV2Props> = ({
         <div className="relative z-10 min-h-[96px] py-1 border-t border-white/5 mb-5">
           <DualDepthContent
             depth={depth}
-            className="text-xs text-neutral-300 leading-relaxed font-sans"
+            className="text-[12.5px] text-neutral-300 leading-relaxed font-sans"
             beginnerContent={
-              <div className="space-y-2">
+              <div className="space-y-2 mt-2">
                 <p>{concept.definition_beginner}</p>
-                <div className="text-[10px] text-signal-gold/90 font-mono mt-1">
-                  🎓 Analogy-focused explanation
+                <div className="text-[10px] text-signal-gold/90 font-mono mt-2 flex items-center gap-1">
+                  <span>🎓</span> Analogy-focused explanation
                 </div>
               </div>
             }
             technicalContent={
-              <div className="space-y-2 font-mono text-[11px] text-neutral-300">
+              <div className="space-y-2 font-mono text-[11px] text-neutral-300 mt-2">
                 <p>{concept.definition_technical}</p>
-                <div className="text-[10px] text-contrast-violet/90 mt-1">
-                  ⚙️ Tech specifications & details
+                <div className="text-[10px] text-contrast-violet/90 mt-2 flex items-center gap-1">
+                  <span>⚙️</span> Tech specifications & details
                 </div>
               </div>
             }
