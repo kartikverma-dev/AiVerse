@@ -17,6 +17,7 @@ export default async function GraphPage() {
       id: c.id, name: c.name, status: c.status,
       difficulty: c.difficulty, categories: c.categories || [],
       slug: c.slug,
+      first_appeared: c.first_appeared,
     }))
     links = evolutions.map(ev => ({
       source: ev.parent_concept_id,

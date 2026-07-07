@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import ConceptCard from '@/components/public/ConceptCard'
 import type { Concept } from '@/types'
+import { parseYear } from '@/lib/yearParser'
 
 const STATUS_FILTERS = ['all', 'emerging', 'growing', 'stable', 'declining', 'historical']
 const CATEGORY_FILTERS = ['All', 'Agents', 'Prompting', 'Training', 'Retrieval', 'Infrastructure', 'Coding']
@@ -15,6 +16,8 @@ export default function ConceptsClient() {
   const [status, setStatus] = useState('all')
   const [category, setCategory] = useState('All')
   const [priority, setPriority] = useState('all')
+  const [selectedYear, setSelectedYear] = useState(2026)
+  const [isPlaying, setIsPlaying] = useState(false)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -34,9 +37,25 @@ export default function ConceptsClient() {
 
   useEffect(() => { load() }, [load])
 
-  const filtered = priority === 'all'
+  useEffect(() => {
+    let timer: NodeJS.Timeout
+    if (isPlaying) {
+      timer = setInterval(() => {
+        setSelectedYear(prev => {
+          if (prev >= 2026) return 2015
+          return prev + 1
+        })
+      }, 1200)
+    }
+    return () => {
+      if (timer) clearInterval(timer)
+    }
+  }, [isPlaying])
+
+  const filtered = (priority === 'all'
     ? concepts
     : concepts.filter(c => c.learning_priority === priority)
+  ).filter(c => parseYear(c.first_appeared) <= selectedYear)
 
   const btn = (active: boolean, label: string, onClick: () => void) => (
     <button key={label} onClick={onClick} style={{
@@ -73,6 +92,70 @@ export default function ConceptsClient() {
             borderRadius: 'var(--radius)', color: 'var(--text)', fontSize: '14px', outline: 'none',
           }}
         />
+      </div>
+
+      {/* Timeline Slider */}
+      <div style={{
+        background: 'var(--bg-2)', border: '1px solid var(--border)',
+        borderRadius: '12px', padding: '16px 20px', marginBottom: '24px',
+        display: 'flex', flexDirection: 'column', gap: '12px'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+          <div>
+            <h3 style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--text)', display: 'flex', alignItems: 'center', gap: '6px', margin: 0, fontFamily: 'var(--font-heading)' }}>
+              <span>⏳</span> Time-Travel Timeline
+            </h3>
+            <p style={{ fontSize: '12px', color: 'var(--text-3)', margin: '2px 0 0 0' }}>
+              Drag to view the state of AI knowledge in any given year.
+            </p>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <button 
+              onClick={() => setIsPlaying(!isPlaying)}
+              style={{
+                background: isPlaying ? 'var(--accent-dim)' : 'var(--bg-3)',
+                border: '1px solid ' + (isPlaying ? 'var(--accent-border)' : 'var(--border)'),
+                color: isPlaying ? 'var(--accent)' : 'var(--text-2)',
+                borderRadius: '6px', padding: '5px 12px', fontSize: '11px', fontWeight: 600,
+                cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px',
+                transition: 'all 0.2s', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.04em'
+              }}
+            >
+              {isPlaying ? '⏸️ Pause' : '▶️ Play Evolution'}
+            </button>
+            <div style={{
+              background: 'var(--accent-dim)', color: 'var(--accent)', border: '1px solid var(--accent-border)',
+              borderRadius: '6px', padding: '4px 10px', fontSize: '13px', fontWeight: 700,
+              fontFamily: 'var(--font-mono)'
+            }}>
+              {selectedYear}
+            </div>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <span style={{ fontSize: '11px', color: 'var(--text-3)', fontFamily: 'var(--font-mono)' }}>2015</span>
+          <input 
+            type="range"
+            min="2015"
+            max="2026"
+            value={selectedYear}
+            onChange={e => {
+              setSelectedYear(parseInt(e.target.value, 10))
+              setIsPlaying(false)
+            }}
+            style={{
+              flex: 1,
+              height: '6px',
+              borderRadius: '3px',
+              background: 'var(--border)',
+              outline: 'none',
+              cursor: 'pointer',
+              accentColor: 'var(--accent)'
+            }}
+          />
+          <span style={{ fontSize: '11px', color: 'var(--text-3)', fontFamily: 'var(--font-mono)' }}>2026</span>
+        </div>
       </div>
 
       {/* Filters */}

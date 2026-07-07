@@ -91,6 +91,48 @@ async function seedDigests() {
       concept_slug: 'direct-preference-optimization',
       summary: 'A new study evaluates DPO vs. PPO across a range of math and reasoning benchmarks, finding that DPO maintains equivalent alignment quality while reducing the training hardware footprint by 40%.'
     },
+    {
+      week_of: '2026-06-29',
+      entry_type: 'new_concept',
+      concept_slug: 'state-space-models',
+      summary: 'State Space Models (like Mamba) are seeing increased adoption as researchers look for sub-quadratic alternatives to self-attention for processing extremely long contexts.'
+    },
+    {
+      week_of: '2026-06-29',
+      entry_type: 'new_concept',
+      concept_slug: 'test-time-compute',
+      summary: 'Test-Time Compute emerges as the key paradigm shift in reasoning models, with frameworks prioritizing search and verification at inference time over massive pre-training runs.'
+    },
+    {
+      week_of: '2026-06-29',
+      entry_type: 'new_concept',
+      concept_slug: 'graph-rag',
+      summary: 'GraphRAG reaches prominence as a framework for building highly accurate knowledge retrieval engines by combining vector databases with structured knowledge graphs.'
+    },
+    {
+      week_of: '2026-06-29',
+      entry_type: 'new_concept',
+      concept_slug: 'mixture-of-depths',
+      summary: 'Mixture of Depths (MoD) is introduced by researchers, showing that language models can dynamically bypass layer calculations for simple tokens to optimize compute budgets.'
+    },
+    {
+      week_of: '2026-06-29',
+      entry_type: 'new_concept',
+      concept_slug: 'world-models',
+      summary: 'World Models gain attention as physical simulators for autonomous systems, moving beyond basic prediction to model visual dynamics and causal state transitions.'
+    },
+    {
+      week_of: '2026-06-29',
+      entry_type: 'new_concept',
+      concept_slug: 'direct-nash-optimization',
+      summary: 'Direct Nash Optimization (DNO) emerges as a game-theoretic reinforcement learning alignment algorithm, proving highly competitive against RLHF and DPO.'
+    },
+    {
+      week_of: '2026-06-29',
+      entry_type: 'new_concept',
+      concept_slug: 'corrective-rag',
+      summary: 'Corrective RAG (CRAG) is adopted to enhance retrieval reliability by evaluating document accuracy and dynamically triggering corrective live web searches.'
+    },
     // Week of 2026-06-22
     {
       week_of: '2026-06-22',
@@ -110,12 +152,54 @@ async function seedDigests() {
       concept_slug: 'guardrails',
       summary: 'Guardrails enter mainstream adoption with the release of NVIDIA NeMo Guardrails 2.0. The update provides zero-latency interceptors to screen toxic outputs and enforce strict structured JSON schema formats on LLM APIs.'
     },
+    {
+      week_of: '2026-06-22',
+      entry_type: 'framework_release',
+      concept_slug: 'prompt-caching',
+      summary: 'Major API providers introduce Prompt Caching, allowing developers to cache long contexts (like system instructions or documentation) and achieve up to a 90% reduction in latency and costs.'
+    },
+    {
+      week_of: '2026-06-22',
+      entry_type: 'new_concept',
+      concept_slug: 'bitnet',
+      summary: 'BitNet b1.58 (1-bit LLMs) gets widely discussed for its capacity to run large language models using integer addition and subtraction, eliminating expensive floating-point multiplications.'
+    },
+    {
+      week_of: '2026-06-22',
+      entry_type: 'framework_release',
+      concept_slug: 'ring-attention',
+      summary: 'Ring Attention implementation goes main-stream, allowing context windows to scale to millions of tokens by distributing key-value attention matrices across ring-connected GPUs.'
+    },
+    {
+      week_of: '2026-06-22',
+      entry_type: 'new_concept',
+      concept_slug: 'diffusion-forcing',
+      summary: 'Diffusion Forcing is introduced as a novel generation paradigm, combining seq2seq autoregression with stable, drift-free diffusion modeling.'
+    },
     // Week of 2026-06-15
     {
       week_of: '2026-06-15',
       entry_type: 'status_change',
       concept_slug: 'small-language-models',
       summary: 'Small Language Models (SLMs) have reached stable maturity. Deployments of Microsoft Phi-3 and Llama-3-8B on edge devices have proven that sub-10B parameter models can handle complex local reasoning tasks reliably.'
+    },
+    {
+      week_of: '2026-06-15',
+      entry_type: 'framework_release',
+      concept_slug: 'structured-outputs',
+      summary: 'Structured Outputs become natively supported across major models, guaranteeing 100% adherence to specified JSON schemas by constraining token sampling logits.'
+    },
+    {
+      week_of: '2026-06-15',
+      entry_type: 'status_change',
+      concept_slug: 'mechanistic-interpretability',
+      summary: 'Mechanistic Interpretability transitions from theoretical research to debugging tool, with engineers using attribution graphs to trace how models plan and reason.'
+    },
+    {
+      week_of: '2026-06-15',
+      entry_type: 'new_concept',
+      concept_slug: 'flow-engineering',
+      summary: 'Flow Engineering is defined as the practice of structuring agentic workflows as deterministic state graphs rather than simple chat loops.'
     },
     {
       week_of: '2026-06-15',
