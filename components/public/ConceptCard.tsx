@@ -11,7 +11,19 @@ const priorityLabel: Record<string, string> = {
   nice_to_know: 'Nice to know', historical: 'Historical'
 }
 
-export default function ConceptCard({ concept, index = 0 }: { concept: Concept; index?: number }) {
+export default function ConceptCard({
+  concept,
+  index = 0,
+  isComparing = false,
+  isSelectedForCompare = false,
+  onToggleCompare,
+}: {
+  concept: Concept
+  index?: number
+  isComparing?: boolean
+  isSelectedForCompare?: boolean
+  onToggleCompare?: () => void
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 18 }}
@@ -44,7 +56,30 @@ export default function ConceptCard({ concept, index = 0 }: { concept: Concept; 
                 )}
               </div>
             </div>
-            <span style={{ fontSize: '20px', flexShrink: 0 }}>{statusEmoji[concept.status]}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+              {isComparing && (
+                <button
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    onToggleCompare?.()
+                  }}
+                  style={{
+                    background: isSelectedForCompare ? 'var(--accent-dim)' : 'var(--bg-3)',
+                    border: '1px solid ' + (isSelectedForCompare ? 'var(--accent-border)' : 'var(--border)'),
+                    color: isSelectedForCompare ? 'var(--accent)' : 'var(--text-3)',
+                    padding: '3px 8px', borderRadius: '4px', fontSize: '10px',
+                    fontFamily: 'var(--font-mono)', cursor: 'pointer',
+                    transition: 'all 0.15s',
+                    textTransform: 'uppercase', letterSpacing: '0.04em',
+                    display: 'flex', alignItems: 'center', gap: '4px'
+                  }}
+                >
+                  <span style={{ fontSize: '9px' }}>{isSelectedForCompare ? '✓' : '+'}</span> Compare
+                </button>
+              )}
+              <span style={{ fontSize: '20px' }}>{statusEmoji[concept.status]}</span>
+            </div>
           </div>
 
           <p style={{ fontSize: '14.5px', color: 'var(--text-2)', lineHeight: '1.65', marginBottom: '15px' }}>
