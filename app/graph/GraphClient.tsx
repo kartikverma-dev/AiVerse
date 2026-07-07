@@ -118,6 +118,7 @@ export default function GraphClient({ nodes, links }: { nodes: Node[]; links: Li
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const cameraPosRef = useRef<any>(null)
   const controlsTargetRef = useRef<any>(null)
+  const zoomTransformRef = useRef<any>(null)
   const [viewMode, setViewMode] = useState<'2d' | '3d'>('2d')
   const [selected, setSelected] = useState<Node | null>(null)
   const [filterStatus, setFilterStatus] = useState('all')
@@ -170,11 +171,18 @@ export default function GraphClient({ nodes, links }: { nodes: Node[]; links: Li
 
     const g = svg.append('g')
 
-    svg.call(
-      d3.zoom<SVGSVGElement, unknown>()
-        .scaleExtent([0.3, 3])
-        .on('zoom', e => g.attr('transform', e.transform.toString()))
-    )
+    const zoomBehavior = d3.zoom<SVGSVGElement, unknown>()
+      .scaleExtent([0.3, 3])
+      .on('zoom', e => {
+        zoomTransformRef.current = e.transform
+        g.attr('transform', e.transform.toString())
+      })
+
+    svg.call(zoomBehavior)
+
+    if (zoomTransformRef.current) {
+      svg.call(zoomBehavior.transform as any, zoomTransformRef.current)
+    }
 
     // Arrow markers
     const defs = svg.append('defs')
