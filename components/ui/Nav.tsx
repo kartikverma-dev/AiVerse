@@ -70,7 +70,7 @@ export default function Nav() {
             gap: '4px',
           }}>
             <span>{l.label}</span>
-            {l.badge && <span style={{ fontSize: '11px', animation: 'pulse 1.5s infinite' }}>{l.badge}</span>}
+            {l.badge && <span style={{ fontSize: '11px' }}>{l.badge}</span>}
           </Link>
         ))}
       </div>
