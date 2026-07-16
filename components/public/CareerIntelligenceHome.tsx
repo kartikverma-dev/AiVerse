@@ -19,8 +19,7 @@ import {
   FileText,
   HelpCircle,
   Award,
-  ChevronRight,
-  TrendingRight
+  ChevronRight
 } from 'lucide-react'
 import type { Concept } from '@/types'
 
