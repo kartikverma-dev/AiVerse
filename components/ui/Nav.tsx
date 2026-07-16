@@ -9,6 +9,7 @@ const links = [
   { href: '/timeline', label: 'Timeline' },
   { href: '/graph', label: 'Graph' },
   { href: '/digest', label: 'Digest' },
+  { href: '/radar', label: 'Skill Radar', badge: '🔥' },
 ]
 
 export default function Nav() {
@@ -56,7 +57,7 @@ export default function Nav() {
       </Link>
 
       {/* Desktop Navigation links */}
-      <div className="desktop-nav" style={{ gap: '4px', flex: 1, display: 'flex' }}>
+      <div className="desktop-nav" style={{ gap: '4px', flex: 1, display: 'flex', alignItems: 'center' }}>
         {links.map(l => (
           <Link key={l.href} href={l.href} style={{
             padding: '6px 12px', borderRadius: 'var(--radius)',
@@ -64,7 +65,13 @@ export default function Nav() {
             color: path?.startsWith(l.href) ? 'var(--text)' : 'var(--text-2)',
             background: path?.startsWith(l.href) ? 'var(--bg-3)' : 'transparent',
             transition: 'background-color 0.2s, color 0.2s',
-          }}>{l.label}</Link>
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '4px',
+          }}>
+            <span>{l.label}</span>
+            {l.badge && <span style={{ fontSize: '11px', animation: 'pulse 1.5s infinite' }}>{l.badge}</span>}
+          </Link>
         ))}
       </div>
 
@@ -143,8 +150,11 @@ export default function Nav() {
                 fontSize: '16px', fontWeight: 600,
                 color: path?.startsWith(l.href) ? 'var(--text)' : 'var(--text-2)',
                 background: path?.startsWith(l.href) ? 'var(--bg-3)' : 'transparent',
-                display: 'block', minHeight: '44px',
-              }}>{l.label}</Link>
+                display: 'flex', alignItems: 'center', gap: '6px', minHeight: '44px',
+              }}>
+                <span>{l.label}</span>
+                {l.badge && <span style={{ fontSize: '13px' }}>{l.badge}</span>}
+              </Link>
             ))}
           </div>
 

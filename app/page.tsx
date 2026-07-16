@@ -5,7 +5,7 @@ import HeroSection from '@/components/public/HeroSection'
 import ParticleBurst from '@/components/public/ParticleBurst'
 import TermMarquee from '@/components/public/TermMarquee'
 import FeatureBento from '@/components/public/FeatureBento'
-import AnimatedSections from '@/components/public/AnimatedSections'
+import CareerIntelligenceHome from '@/components/public/CareerIntelligenceHome'
 import CtaFooter from '@/components/public/CtaFooter'
 
 export const revalidate = 60
@@ -82,7 +82,7 @@ export default async function Home() {
           <InteractiveEvolution concepts={allConcepts} />
         </section>
 
-        <AnimatedSections
+        <CareerIntelligenceHome
           latestConcepts={latestConcepts}
           recentDigestItems={recentDigestItems}
           statusCounts={statusCounts}
