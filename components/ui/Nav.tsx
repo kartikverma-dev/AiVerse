@@ -10,6 +10,7 @@ const links = [
   { href: '/graph', label: 'Graph' },
   { href: '/digest', label: 'Digest' },
   { href: '/radar', label: 'Skill Radar', badge: '🔥' },
+  { href: '/strategy', label: 'AI Strategy', badge: 'CTO' },
 ]
 
 export default function Nav() {

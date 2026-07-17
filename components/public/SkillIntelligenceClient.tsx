@@ -62,6 +62,8 @@ export default function SkillIntelligenceClient({
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
   const [sortBy, setSortBy] = useState<string>('urgency')
   const [expandedConcept, setExpandedConcept] = useState<string | null>(null)
+  const [viewMode, setViewMode] = useState<'radar' | 'list'>('radar')
+  const [selectedRadarSkill, setSelectedRadarSkill] = useState<any | null>(null)
 
   // Map concepts to Skill Directives with computed urgency and Career Strategic Metrics
   const skillDirectives = useMemo(() => {
@@ -337,6 +339,48 @@ export default function SkillIntelligenceClient({
       })
   }, [skillDirectives, searchQuery, selectedUrgency, selectedCategory, sortBy])
 
+  // Polar coordinates mapping for visual SVG Technology Radar
+  const radarPoints = useMemo(() => {
+    return filteredSkills.map((skill, index) => {
+      let ringRadius = 240 // Assess
+      if (skill.status === 'stable') ringRadius = 80
+      else if (skill.status === 'growing') ringRadius = 160
+      
+      // Quadrant assignment based on category mapping
+      let quad = 3 // DevOps & Optimization
+      const cats = skill.categories.map(c => c.toLowerCase())
+      if (cats.some(c => c.includes('agent') || c.includes('reasoning') || c.includes('autonomous'))) {
+        quad = 0 // Agentic Systems
+      } else if (cats.some(c => c.includes('architecture') || c.includes('model') || c.includes('large'))) {
+        quad = 1 // Foundation Models
+      } else if (cats.some(c => c.includes('retrieval') || c.includes('data') || c.includes('vector') || c.includes('infrastructure'))) {
+        quad = 2 // Data & Retrieval
+      }
+      
+      // Angle range for quadrant: 0 = Top-Right, 1 = Top-Left, 2 = Bottom-Left, 3 = Bottom-Right
+      const minAngle = quad * 90 + 15
+      const maxAngle = quad * 90 + 75
+      
+      // Pseudo-random but deterministic placement based on index/length
+      const seed = filteredSkills.length > 1 ? index / (filteredSkills.length - 1) : 0.5
+      const angle = minAngle + seed * (maxAngle - minAngle)
+      const jitteredRadius = ringRadius - 25 + seed * 50
+      
+      // Polar to Cartesian
+      const radians = (angle * Math.PI) / 180
+      const x = 300 + jitteredRadius * Math.cos(radians)
+      const y = 300 + jitteredRadius * Math.sin(radians)
+      
+      return {
+        ...skill,
+        quad,
+        x,
+        y,
+        ringRadius
+      }
+    })
+  }, [filteredSkills])
+
   // Categories list
   const categoriesList = useMemo(() => {
     const set = new Set<string>()
@@ -527,9 +571,38 @@ export default function SkillIntelligenceClient({
       </div>
 
       {/* 4. Priority Radar Results Grid */}
-      <h2 style={{ fontSize: '18px', fontWeight: 800, fontFamily: 'var(--font-heading)', color: 'var(--text)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <span>📊</span> Strategic Career Value Ratings ({filteredSkills.length})
-      </h2>
+      {/* 4. Priority Radar Results Grid / Technology Radar Toggle */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
+        <h2 style={{ fontSize: '18px', fontWeight: 800, fontFamily: 'var(--font-heading)', color: 'var(--text)', display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
+          <span>📊</span> Strategic Career Value Ratings ({filteredSkills.length})
+        </h2>
+        <div style={{ display: 'flex', gap: '4px', background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: '6px', padding: '3px' }}>
+          <button
+            onClick={() => setViewMode('radar')}
+            style={{
+              padding: '6px 12px', borderRadius: '4px', border: 'none',
+              background: viewMode === 'radar' ? 'var(--accent)' : 'transparent',
+              color: viewMode === 'radar' ? 'var(--bg-1)' : 'var(--text-3)',
+              fontSize: '12px', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s',
+              fontFamily: 'var(--font-mono)'
+            }}
+          >
+            Radar Chart
+          </button>
+          <button
+            onClick={() => setViewMode('list')}
+            style={{
+              padding: '6px 12px', borderRadius: '4px', border: 'none',
+              background: viewMode === 'list' ? 'var(--accent)' : 'transparent',
+              color: viewMode === 'list' ? 'var(--bg-1)' : 'var(--text-3)',
+              fontSize: '12px', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s',
+              fontFamily: 'var(--font-mono)'
+            }}
+          >
+            Directives List
+          </button>
+        </div>
+      </div>
 
       {filteredSkills.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '60px', background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', color: 'var(--text-2)', marginBottom: '48px' }}>
@@ -541,6 +614,200 @@ export default function SkillIntelligenceClient({
           >
             Reset Filters
           </button>
+        </div>
+      ) : viewMode === 'radar' ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', marginBottom: '64px' }}>
+          {/* Tech Radar SVG Container */}
+          <div style={{
+            background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: 'var(--radius)',
+            padding: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative'
+          }}>
+            <svg viewBox="0 0 600 600" style={{ width: '100%', maxWidth: '600px', height: 'auto', background: 'transparent' }}>
+              {/* Quadrant background colors */}
+              <path d="M 300,300 L 600,300 A 300,300 0 0,1 300,600 Z" fill="rgba(212,175,55,0.01)" /> {/* Bottom-Right */}
+              <path d="M 300,300 L 300,600 A 300,300 0 0,1 0,300 Z" fill="rgba(63,166,107,0.01)" /> {/* Bottom-Left */}
+              <path d="M 300,300 L 0,300 A 300,300 0 0,1 300,0 Z" fill="rgba(138,134,125,0.01)" /> {/* Top-Left */}
+              <path d="M 300,300 L 300,0 A 300,300 0 0,1 600,300 Z" fill="rgba(239,68,68,0.01)" /> {/* Top-Right */}
+
+              {/* Radar Concentric Rings */}
+              <circle cx="300" cy="300" r="240" fill="none" stroke="var(--border)" strokeWidth="1" strokeDasharray="4 4" />
+              <circle cx="300" cy="300" r="160" fill="none" stroke="var(--border)" strokeWidth="1.5" />
+              <circle cx="300" cy="300" r="80" fill="none" stroke="var(--border)" strokeWidth="2.5" />
+              
+              {/* Ring Labels */}
+              <text x="305" y="105" fill="var(--text-3)" fontSize="9" fontWeight="700" letterSpacing="0.05em" fontFamily="var(--font-mono)">ADOPT (CORE)</text>
+              <text x="305" y="185" fill="var(--text-3)" fontSize="9" fontWeight="700" letterSpacing="0.05em" fontFamily="var(--font-mono)">TRIAL (GROWING)</text>
+              <text x="305" y="265" fill="var(--text-3)" fontSize="9" fontWeight="700" letterSpacing="0.05em" fontFamily="var(--font-mono)">ASSESS (EMERGING)</text>
+
+              {/* Crosshair lines */}
+              <line x1="300" y1="0" x2="300" y2="600" stroke="var(--border)" strokeWidth="1" />
+              <line x1="0" y1="300" x2="600" y2="300" stroke="var(--border)" strokeWidth="1" />
+
+              {/* Quadrant Labels */}
+              <text x="590" y="25" fill="var(--danger)" fontSize="11" fontWeight="800" textAnchor="end" letterSpacing="0.05em" fontFamily="var(--font-mono)">AGENTIC SYSTEMS</text>
+              <text x="10" y="25" fill="var(--text-3)" fontSize="11" fontWeight="800" textAnchor="start" letterSpacing="0.05em" fontFamily="var(--font-mono)">FOUNDATION MODELS</text>
+              <text x="10" y="585" fill="#3FA66B" fontSize="11" fontWeight="800" textAnchor="start" letterSpacing="0.05em" fontFamily="var(--font-mono)">DATA & RETRIEVAL</text>
+              <text x="590" y="585" fill="var(--accent)" fontSize="11" fontWeight="800" textAnchor="end" letterSpacing="0.05em" fontFamily="var(--font-mono)">DEVOPS & OPTIMIZATION</text>
+
+              {/* Dots */}
+              {radarPoints.map((point) => {
+                const isSelected = selectedRadarSkill?.conceptId === point.conceptId
+                const dotColor = getUrgencyColor(point.urgencyLevel)
+                
+                return (
+                  <g 
+                    key={point.conceptId} 
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => setSelectedRadarSkill(point)}
+                  >
+                    {/* Outer halo for selected or hovered */}
+                    {isSelected && (
+                      <circle 
+                        cx={point.x} 
+                        cy={point.y} 
+                        r="14" 
+                        fill="none" 
+                        stroke={dotColor} 
+                        strokeWidth="2" 
+                        style={{ opacity: 0.4 }} 
+                      />
+                    )}
+                    {/* Main Dot */}
+                    <circle 
+                      cx={point.x} 
+                      cy={point.y} 
+                      r={isSelected ? "8" : "6"} 
+                      fill={dotColor} 
+                      stroke="var(--bg-1)" 
+                      strokeWidth="1.5" 
+                      style={{ transition: 'r 0.2s, fill 0.2s' }}
+                    />
+                    {/* Abbreviated text label next to dot */}
+                    <text 
+                      x={point.x + 10} 
+                      y={point.y + 4} 
+                      fill={isSelected ? "var(--text)" : "var(--text-2)"} 
+                      fontSize={isSelected ? "11" : "9.5"} 
+                      fontWeight={isSelected ? "800" : "600"}
+                      fontFamily="var(--font-heading)"
+                    >
+                      {point.name.length > 15 ? point.name.substring(0, 13) + '..' : point.name}
+                    </text>
+                  </g>
+                )
+              })}
+            </svg>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', justifyContent: 'center', marginTop: '16px', borderTop: '1px solid var(--border)', paddingTop: '16px', width: '100%' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontFamily: 'var(--font-mono)' }}>
+                <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: 'var(--danger)' }} />
+                <span>CRITICAL Priority</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontFamily: 'var(--font-mono)' }}>
+                <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)' }} />
+                <span>HIGH Priority</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontFamily: 'var(--font-mono)' }}>
+                <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#3FA66B' }} />
+                <span>MEDIUM Priority</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontFamily: 'var(--font-mono)' }}>
+                <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: 'var(--text-3)' }} />
+                <span>LOW Priority</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Selected Skill Information Card */}
+          {selectedRadarSkill ? (
+            <div style={{
+              background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: 'var(--radius)',
+              padding: '24px', boxShadow: '0 8px 24px rgba(212,175,55,0.04)', position: 'relative'
+            }}>
+              {/* Glow indicator */}
+              <div style={{ position: 'absolute', top: 0, left: 0, width: '4px', height: '100%', background: getUrgencyColor(selectedRadarSkill.urgencyLevel) }} />
+              
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                    <span style={{
+                      fontSize: '9px', fontWeight: 800, padding: '3px 8px',
+                      background: getUrgencyBg(selectedRadarSkill.urgencyLevel), color: getUrgencyColor(selectedRadarSkill.urgencyLevel),
+                      border: `1px solid ${getUrgencyBorder(selectedRadarSkill.urgencyLevel)}`, borderRadius: '4px',
+                      fontFamily: 'var(--font-mono)'
+                    }}>
+                      {selectedRadarSkill.urgencyLevel} PRIORITY
+                    </span>
+                    <span style={{ fontSize: '12px', color: 'var(--text-3)', fontFamily: 'var(--font-mono)' }}>
+                      Status: {selectedRadarSkill.status.toUpperCase()}
+                    </span>
+                  </div>
+                  <h3 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--text)', margin: 0, fontFamily: 'var(--font-heading)' }}>
+                    {selectedRadarSkill.name}
+                  </h3>
+                </div>
+                
+                <Link href={`/concepts/${selectedRadarSkill.slug}`}>
+                  <button style={{
+                    background: 'var(--accent)', color: 'var(--bg-1)', border: 'none',
+                    padding: '8px 16px', borderRadius: '6px', fontSize: '13px', fontWeight: 700,
+                    cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px'
+                  }}>
+                    <BookOpen size={14} />
+                    <span>Full Specifications</span>
+                  </button>
+                </Link>
+              </div>
+
+              <p style={{ color: 'var(--text-2)', fontSize: '15px', lineHeight: 1.6, marginBottom: '20px' }}>
+                {selectedRadarSkill.tldr}
+              </p>
+
+              {/* Metrics Grid */}
+              <div style={{
+                display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '12px',
+                padding: '16px', background: 'var(--bg-3)', border: '1px solid var(--border)', borderRadius: '8px',
+                marginBottom: '20px'
+              }}>
+                <div>
+                  <span style={{ fontSize: '11px', color: 'var(--text-3)', fontFamily: 'var(--font-mono)' }}>📈 Trend Score</span>
+                  <div style={{ fontSize: '14.5px', fontWeight: 700, color: 'var(--text)', marginTop: '2px' }}>{selectedRadarSkill.metrics.trendScore}/100</div>
+                </div>
+                <div>
+                  <span style={{ fontSize: '11px', color: 'var(--text-3)', fontFamily: 'var(--font-mono)' }}>🏢 Adoption</span>
+                  <div style={{ fontSize: '14.5px', fontWeight: 700, color: 'var(--text)', marginTop: '2px' }}>{selectedRadarSkill.metrics.enterpriseAdoption}</div>
+                </div>
+                <div>
+                  <span style={{ fontSize: '11px', color: 'var(--text-3)', fontFamily: 'var(--font-mono)' }}>💼 Job Demand</span>
+                  <div style={{ fontSize: '14.5px', fontWeight: 700, color: 'var(--text)', marginTop: '2px' }}>{selectedRadarSkill.metrics.jobDemand}</div>
+                </div>
+                <div>
+                  <span style={{ fontSize: '11px', color: 'var(--text-3)', fontFamily: 'var(--font-mono)' }}>🔮 Relevance</span>
+                  <div style={{ fontSize: '14.5px', fontWeight: 700, color: 'var(--text)', marginTop: '2px' }}>{selectedRadarSkill.metrics.futureRelevance}/10</div>
+                </div>
+                <div>
+                  <span style={{ fontSize: '11px', color: 'var(--text-3)', fontFamily: 'var(--font-mono)' }}>⏱ Study Time</span>
+                  <div style={{ fontSize: '14.5px', fontWeight: 700, color: 'var(--text)', marginTop: '2px' }}>{selectedRadarSkill.metrics.estimatedTime}</div>
+                </div>
+              </div>
+
+              {/* Actionable Directive */}
+              <div style={{ padding: '16px', background: 'rgba(212, 175, 55, 0.04)', borderLeft: '4px solid var(--accent)', borderRadius: '4px' }}>
+                <h4 style={{ fontSize: '12px', fontWeight: 800, textTransform: 'uppercase', fontFamily: 'var(--font-mono)', color: 'var(--accent)', marginBottom: '6px' }}>
+                  Actionable Learning Directive
+                </h4>
+                <p style={{ fontSize: '13.5px', color: 'var(--text)', fontWeight: 500, lineHeight: 1.5, margin: 0 }}>
+                  {selectedRadarSkill.directive}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div style={{
+              textAlign: 'center', padding: '40px', background: 'var(--bg-2)', border: '1px dashed var(--border)',
+              borderRadius: 'var(--radius)', color: 'var(--text-3)'
+            }}>
+              <span>💡</span> Click on any radar dot above to view its strategic career directives and metrics.
+            </div>
+          )}
         </div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px', marginBottom: '64px' }}>

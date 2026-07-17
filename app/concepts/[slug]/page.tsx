@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import Nav from '@/components/ui/Nav'
 import { getConceptBySlug, getConcepts } from '@/lib/db'
+import { getStrategicInsights } from '@/lib/strategic-insights'
 import Link from 'next/link'
 
 export const revalidate = 60
@@ -21,6 +22,8 @@ export default async function ConceptPage({ params }: { params: Promise<{ slug: 
   const { slug } = await params
   const concept = await getConceptBySlug(slug)
   if (!concept) notFound()
+
+  const insights = getStrategicInsights(concept.slug, concept.status, concept.difficulty)
 
   const priorityLabel: Record<string, string> = {
     learn_now: '🔥 Learn now', know_basics: '📗 Know basics',
@@ -152,6 +155,90 @@ export default async function ConceptPage({ params }: { params: Promise<{ slug: 
               💡 Beginner explanation
             </div>
             <p style={{ color: 'var(--text)', fontSize: '16.5px', lineHeight: 1.8 }}>{concept.definition_beginner}</p>
+          </section>
+
+          {/* Maturity Assessment */}
+          <section style={{ marginBottom: '44px' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: 700, fontFamily: 'var(--font-heading)', color: 'var(--text)', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span>📊</span> Maturity Assessment
+            </h2>
+            <div style={{
+              background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '24px',
+              display: 'grid', gridTemplateColumns: '1fr', gap: '20px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: '14px' }}>
+                <span style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-2)' }}>Overall Maturity Score</span>
+                <span style={{ fontSize: '24px', fontWeight: 800, fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>{insights.maturityScore}/100</span>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+                {[
+                  { label: 'Academic / Paper Mentions', val: insights.maturityFactors.academic },
+                  { label: 'Production Readiness', val: insights.maturityFactors.production },
+                  { label: 'Tooling Ecosystem', val: insights.maturityFactors.tooling },
+                  { label: 'Community Volume', val: insights.maturityFactors.community }
+                ].map(factor => (
+                  <div key={factor.label} style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
+                      <span style={{ color: 'var(--text-3)', fontFamily: 'var(--font-mono)' }}>{factor.label}</span>
+                      <span style={{ color: 'var(--text)', fontWeight: 600 }}>{factor.val}%</span>
+                    </div>
+                    <div style={{ height: '6px', background: 'var(--bg-3)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div style={{ height: '100%', width: `${factor.val}%`, background: 'var(--accent)', borderRadius: '3px' }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Enterprise Adoption Implications */}
+          <section style={{ marginBottom: '44px' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: 700, fontFamily: 'var(--font-heading)', color: 'var(--text)', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span>🏢</span> Enterprise Adoption Implications
+            </h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+              <div style={{ background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '20px' }}>
+                <h3 style={{ fontSize: '13px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--accent)', marginBottom: '8px', fontFamily: 'var(--font-mono)' }}>💻 Infrastructure & Cost</h3>
+                <p style={{ fontSize: '13.5px', color: 'var(--text-2)', lineHeight: 1.6 }}>{insights.enterpriseImplications.infrastructure}</p>
+              </div>
+              <div style={{ background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '20px' }}>
+                <h3 style={{ fontSize: '13px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--accent)', marginBottom: '8px', fontFamily: 'var(--font-mono)' }}>📚 Training & Skill Overhead</h3>
+                <p style={{ fontSize: '13.5px', color: 'var(--text-2)', lineHeight: 1.6 }}>{insights.enterpriseImplications.training}</p>
+              </div>
+              <div style={{ background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '20px' }}>
+                <h3 style={{ fontSize: '13px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--accent)', marginBottom: '8px', fontFamily: 'var(--font-mono)' }}>💰 Business Value Horizon</h3>
+                <p style={{ fontSize: '13.5px', color: 'var(--text-2)', lineHeight: 1.6 }}>{insights.enterpriseImplications.businessValue}</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Governance Relevance (Hook into product) */}
+          <section style={{ marginBottom: '44px', background: 'rgba(239, 68, 68, 0.02)', border: '1px solid rgba(239, 68, 68, 0.15)', borderRadius: 'var(--radius)', padding: '28px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
+              <h2 style={{ fontSize: '20px', fontWeight: 700, fontFamily: 'var(--font-heading)', color: 'var(--text)', display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
+                <span>🛡️</span> Governance & Oversight Relevance
+              </h2>
+              <span style={{
+                fontSize: '10px', fontWeight: 800, padding: '4px 10px',
+                background: insights.governanceRelevance.riskLevel === 'CRITICAL' || insights.governanceRelevance.riskLevel === 'HIGH' ? 'rgba(239, 68, 68, 0.08)' : 'rgba(212, 175, 55, 0.08)',
+                color: insights.governanceRelevance.riskLevel === 'CRITICAL' || insights.governanceRelevance.riskLevel === 'HIGH' ? 'var(--danger)' : 'var(--accent)',
+                border: `1px solid ${insights.governanceRelevance.riskLevel === 'CRITICAL' || insights.governanceRelevance.riskLevel === 'HIGH' ? 'rgba(239, 68, 68, 0.25)' : 'rgba(212, 175, 55, 0.25)'}`,
+                borderRadius: '20px', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.04em'
+              }}>
+                {insights.governanceRelevance.riskLevel} GRC RISK LEVEL
+              </span>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ borderBottom: '1px solid rgba(239, 68, 68, 0.08)', paddingBottom: '12px' }}>
+                <strong style={{ display: 'block', fontSize: '12px', color: 'var(--text-3)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '4px' }}>Compliance & Regulatory Impact</strong>
+                <p style={{ fontSize: '14.5px', color: 'var(--text-2)', lineHeight: 1.6 }}>{insights.governanceRelevance.complianceImpact}</p>
+              </div>
+              <div>
+                <strong style={{ display: 'block', fontSize: '12px', color: 'var(--text-3)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '4px' }}>Oversight & Monitoring Guideline</strong>
+                <p style={{ fontSize: '14.5px', color: 'var(--text-2)', lineHeight: 1.6 }}>{insights.governanceRelevance.oversightGuideline}</p>
+              </div>
+            </div>
           </section>
 
           {/* Examples */}
