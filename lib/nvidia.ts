@@ -65,7 +65,7 @@ Respond with ONLY JSON: {"status": "emerging|growing|stable|declining|historical
 }
 
 export async function generateDigestSummary(entries: Array<{ type: string; concept: string; detail: string }>): Promise<string> {
-  const prompt = `Generate a concise weekly digest summary for the AiVerse platform based on these updates:
+  const prompt = `Generate a concise weekly digest summary for the CredgeAiVerse platform based on these updates:
 ${JSON.stringify(entries, null, 2)}
 
 Write 2-3 sentences summarizing the week's highlights for AI practitioners. Be specific and factual.`

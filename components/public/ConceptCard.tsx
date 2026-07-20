@@ -86,7 +86,7 @@ export default function ConceptCard({
             {concept.tldr}
           </p>
 
-          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: 'auto', fontFamily: 'var(--font-mono)', fontSize: '11px' }}>
+          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: 'auto', fontFamily: 'var(--font-mono)', fontSize: '11px', alignItems: 'center' }}>
             <span className={`pill pill-${concept.status}`}>{concept.status}</span>
             <span className={`pill pill-${concept.difficulty}`}>{concept.difficulty}</span>
             {concept.categories?.map(c => (
@@ -95,6 +95,10 @@ export default function ConceptCard({
                 padding: '2px 7px', borderRadius: '4px', border: '1px solid var(--border)',
               }}>{c}</span>
             ))}
+            <span style={{
+              marginLeft: 'auto', fontSize: '10px', color: 'var(--accent)', background: 'var(--accent-dim)',
+              border: '1px solid var(--accent-border)', padding: '2px 7px', borderRadius: '4px', fontWeight: 600
+            }}>🧠 Quiz</span>
           </div>
         </motion.div>
       </Link>

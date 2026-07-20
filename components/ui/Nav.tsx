@@ -49,12 +49,12 @@ export default function Nav() {
       {/* Brand logo */}
       <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginRight: '32px' }} onClick={() => setMenuOpen(false)}>
         <div style={{
-          width: '28px', height: '28px', background: 'var(--accent)',
+          width: '32px', height: '28px', background: 'var(--accent)',
           borderRadius: '6px', display: 'flex', alignItems: 'center',
           justifyContent: 'center', fontSize: '11px', fontWeight: 800, color: 'var(--bg-1)',
           letterSpacing: '-0.3px',
-        }}>AV</div>
-        <span style={{ fontWeight: 700, fontSize: '16px', color: 'var(--text)', fontFamily: 'var(--font-heading)' }}>AiVerse</span>
+        }}>CAV</div>
+        <span style={{ fontWeight: 700, fontSize: '16px', color: 'var(--text)', fontFamily: 'var(--font-heading)' }}>CredgeAiVerse</span>
       </Link>
 
       {/* Desktop Navigation links */}

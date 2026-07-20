@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { 
@@ -64,6 +64,31 @@ export default function SkillIntelligenceClient({
   const [expandedConcept, setExpandedConcept] = useState<string | null>(null)
   const [viewMode, setViewMode] = useState<'radar' | 'list'>('radar')
   const [selectedRadarSkill, setSelectedRadarSkill] = useState<any | null>(null)
+  const [hoveredRadarSkill, setHoveredRadarSkill] = useState<any | null>(null)
+  const [labelMode, setLabelMode] = useState<'smart' | 'critical' | 'all'>('smart')
+  const [selectedQuadrant, setSelectedQuadrant] = useState<number | 'all'>('all')
+  const [learningPlan, setLearningPlan] = useState<string[]>([])
+  const [planToast, setPlanToast] = useState<string | null>(null)
+
+  const toggleLearningPlan = (conceptId: string, name: string) => {
+    setLearningPlan(prev => {
+      const exists = prev.includes(conceptId)
+      if (exists) {
+        setPlanToast(`Removed "${name}" from Learning Plan.`)
+        return prev.filter(id => id !== conceptId)
+      } else {
+        setPlanToast(`Added "${name}" to Learning Plan! 📌`)
+        return [...prev, conceptId]
+      }
+    })
+  }
+
+  useEffect(() => {
+    if (planToast) {
+      const timer = setTimeout(() => setPlanToast(null), 3000)
+      return () => clearTimeout(timer)
+    }
+  }, [planToast])
 
   // Map concepts to Skill Directives with computed urgency and Career Strategic Metrics
   const skillDirectives = useMemo(() => {
@@ -268,6 +293,16 @@ export default function SkillIntelligenceClient({
         }
       }
 
+      let quad = 3 // DevOps & Optimization
+      const cats = (concept.categories || []).map(c => c.toLowerCase())
+      if (cats.some(c => c.includes('agent') || c.includes('reasoning') || c.includes('autonomous'))) {
+        quad = 0 // Agentic Systems
+      } else if (cats.some(c => c.includes('architecture') || c.includes('model') || c.includes('large'))) {
+        quad = 1 // Foundation Models
+      } else if (cats.some(c => c.includes('retrieval') || c.includes('data') || c.includes('vector') || c.includes('infrastructure'))) {
+        quad = 2 // Data & Retrieval
+      }
+
       return {
         conceptId: concept.id,
         name: concept.name,
@@ -281,7 +316,8 @@ export default function SkillIntelligenceClient({
         status: concept.status,
         categories: concept.categories || [],
         tldr: concept.tldr || '',
-        metrics
+        metrics,
+        quad
       }
     })
   }, [initialConcepts, initialEntries])
@@ -324,7 +360,8 @@ export default function SkillIntelligenceClient({
                               s.tldr.toLowerCase().includes(searchQuery.toLowerCase())
         const matchesUrgency = selectedUrgency === 'all' || s.urgencyLevel.toLowerCase() === selectedUrgency.toLowerCase()
         const matchesCategory = selectedCategory === 'All' || s.categories.includes(selectedCategory)
-        return matchesSearch && matchesUrgency && matchesCategory
+        const matchesQuadrant = selectedQuadrant === 'all' || s.quad === selectedQuadrant
+        return matchesSearch && matchesUrgency && matchesCategory && matchesQuadrant
       })
       .sort((a, b) => {
         if (sortBy === 'urgency') {
@@ -337,7 +374,7 @@ export default function SkillIntelligenceClient({
           return a.name.localeCompare(b.name)
         }
       })
-  }, [skillDirectives, searchQuery, selectedUrgency, selectedCategory, sortBy])
+  }, [skillDirectives, searchQuery, selectedUrgency, selectedCategory, selectedQuadrant, sortBy])
 
   // Polar coordinates mapping for visual SVG Technology Radar
   const radarPoints = useMemo(() => {
@@ -622,6 +659,112 @@ export default function SkillIntelligenceClient({
             background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: 'var(--radius)',
             padding: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative'
           }}>
+            {/* Quadrant Quick Filter Bar */}
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: '6px', width: '100%',
+              marginBottom: '16px', flexWrap: 'wrap', borderBottom: '1px solid var(--border)', paddingBottom: '12px'
+            }}>
+              <span style={{ fontSize: '11px', color: 'var(--text-3)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.06em', marginRight: '4px' }}>
+                Quadrant Isolator:
+              </span>
+              {[
+                { id: 'all', label: 'All Quadrants' },
+                { id: 0, label: '🤖 Agentic Systems' },
+                { id: 1, label: '🧠 Foundation Models' },
+                { id: 2, label: '📊 Data & Retrieval' },
+                { id: 3, label: '⚡ DevOps & Optimization' }
+              ].map(q => {
+                const isActive = selectedQuadrant === q.id
+                return (
+                  <button
+                    key={q.id}
+                    onClick={() => setSelectedQuadrant(q.id as any)}
+                    style={{
+                      padding: '4px 10px', borderRadius: '14px', fontSize: '11px', fontWeight: 600,
+                      border: `1px solid ${isActive ? 'var(--accent-border)' : 'var(--border)'}`,
+                      background: isActive ? 'var(--accent-dim)' : 'transparent',
+                      color: isActive ? 'var(--accent)' : 'var(--text-2)', cursor: 'pointer',
+                      fontFamily: 'var(--font-mono)', transition: 'all 0.2s'
+                    }}
+                  >
+                    {q.label}
+                  </button>
+                )
+              })}
+            </div>
+
+            {/* Label Display Mode Controls */}
+            <div style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%',
+              marginBottom: '16px', flexWrap: 'wrap', gap: '10px'
+            }}>
+              <span style={{ fontSize: '11px', color: 'var(--text-3)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                Label Density:
+              </span>
+              <div style={{ display: 'flex', gap: '6px' }}>
+                <button
+                  onClick={() => setLabelMode('smart')}
+                  style={{
+                    padding: '4px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 600,
+                    border: `1px solid ${labelMode === 'smart' ? 'var(--accent-border)' : 'var(--border)'}`,
+                    background: labelMode === 'smart' ? 'var(--accent-dim)' : 'transparent',
+                    color: labelMode === 'smart' ? 'var(--accent)' : 'var(--text-3)', cursor: 'pointer',
+                    fontFamily: 'var(--font-mono)'
+                  }}
+                >
+                  ✨ Smart (Hover/Critical)
+                </button>
+                <button
+                  onClick={() => setLabelMode('critical')}
+                  style={{
+                    padding: '4px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 600,
+                    border: `1px solid ${labelMode === 'critical' ? 'var(--accent-border)' : 'var(--border)'}`,
+                    background: labelMode === 'critical' ? 'var(--accent-dim)' : 'transparent',
+                    color: labelMode === 'critical' ? 'var(--accent)' : 'var(--text-3)', cursor: 'pointer',
+                    fontFamily: 'var(--font-mono)'
+                  }}
+                >
+                  🔥 Critical Only
+                </button>
+                <button
+                  onClick={() => setLabelMode('all')}
+                  style={{
+                    padding: '4px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 600,
+                    border: `1px solid ${labelMode === 'all' ? 'var(--accent-border)' : 'var(--border)'}`,
+                    background: labelMode === 'all' ? 'var(--accent-dim)' : 'transparent',
+                    color: labelMode === 'all' ? 'var(--accent)' : 'var(--text-3)', cursor: 'pointer',
+                    fontFamily: 'var(--font-mono)'
+                  }}
+                >
+                  🌐 Show All
+                </button>
+              </div>
+            </div>
+
+            {/* Hover Tooltip Preview Bar */}
+            {hoveredRadarSkill && (
+              <div style={{
+                position: 'absolute', top: '70px', zIndex: 10,
+                background: 'var(--bg-1)', border: '1px solid var(--accent)',
+                borderRadius: '20px', padding: '5px 16px', display: 'flex', alignItems: 'center', gap: '10px',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.5)', fontSize: '12px', pointerEvents: 'none'
+              }}>
+                <span style={{ fontWeight: 800, color: 'var(--text)', fontFamily: 'var(--font-heading)' }}>
+                  {hoveredRadarSkill.name}
+                </span>
+                <span style={{
+                  fontSize: '9px', fontWeight: 700, padding: '2px 6px', borderRadius: '4px',
+                  background: getUrgencyBg(hoveredRadarSkill.urgencyLevel), color: getUrgencyColor(hoveredRadarSkill.urgencyLevel),
+                  fontFamily: 'var(--font-mono)'
+                }}>
+                  {hoveredRadarSkill.urgencyLevel} ({hoveredRadarSkill.urgencyScore}%)
+                </span>
+                <span style={{ color: 'var(--text-3)', fontSize: '11px', fontFamily: 'var(--font-mono)' }}>
+                  Click to inspect →
+                </span>
+              </div>
+            )}
+
             <svg viewBox="0 0 600 600" style={{ width: '100%', maxWidth: '600px', height: 'auto', background: 'transparent' }}>
               {/* Quadrant background colors */}
               <path d="M 300,300 L 600,300 A 300,300 0 0,1 300,600 Z" fill="rgba(212,175,55,0.01)" /> {/* Bottom-Right */}
@@ -652,16 +795,32 @@ export default function SkillIntelligenceClient({
               {/* Dots */}
               {radarPoints.map((point) => {
                 const isSelected = selectedRadarSkill?.conceptId === point.conceptId
+                const isHovered = hoveredRadarSkill?.conceptId === point.conceptId
                 const dotColor = getUrgencyColor(point.urgencyLevel)
-                
+
+                // Determine whether text label should render for this node
+                let showLabel = false
+                if (labelMode === 'all') {
+                  showLabel = true
+                } else if (labelMode === 'critical') {
+                  showLabel = point.urgencyLevel === 'CRITICAL' || isSelected || isHovered
+                } else {
+                  // smart mode
+                  showLabel = isSelected || isHovered || (point.urgencyLevel === 'CRITICAL' && filteredSkills.length <= 40)
+                }
+
+                const displayName = point.name.length > 18 ? point.name.substring(0, 16) + '..' : point.name
+
                 return (
                   <g 
                     key={point.conceptId} 
                     style={{ cursor: 'pointer' }}
                     onClick={() => setSelectedRadarSkill(point)}
+                    onMouseEnter={() => setHoveredRadarSkill(point)}
+                    onMouseLeave={() => setHoveredRadarSkill(null)}
                   >
                     {/* Outer halo for selected or hovered */}
-                    {isSelected && (
+                    {(isSelected || isHovered) && (
                       <circle 
                         cx={point.x} 
                         cy={point.y} 
@@ -669,30 +828,46 @@ export default function SkillIntelligenceClient({
                         fill="none" 
                         stroke={dotColor} 
                         strokeWidth="2" 
-                        style={{ opacity: 0.4 }} 
+                        style={{ opacity: 0.6 }} 
                       />
                     )}
                     {/* Main Dot */}
                     <circle 
                       cx={point.x} 
                       cy={point.y} 
-                      r={isSelected ? "8" : "6"} 
+                      r={isSelected || isHovered ? "8" : "5.5"} 
                       fill={dotColor} 
                       stroke="var(--bg-1)" 
                       strokeWidth="1.5" 
-                      style={{ transition: 'r 0.2s, fill 0.2s' }}
+                      style={{ transition: 'r 0.15s, fill 0.15s' }}
                     />
-                    {/* Abbreviated text label next to dot */}
-                    <text 
-                      x={point.x + 10} 
-                      y={point.y + 4} 
-                      fill={isSelected ? "var(--text)" : "var(--text-2)"} 
-                      fontSize={isSelected ? "11" : "9.5"} 
-                      fontWeight={isSelected ? "800" : "600"}
-                      fontFamily="var(--font-heading)"
-                    >
-                      {point.name.length > 15 ? point.name.substring(0, 13) + '..' : point.name}
-                    </text>
+                    
+                    {/* Render Backdrop Pill + Text Label if active */}
+                    {showLabel && (
+                      <g>
+                        <rect
+                          x={point.x + 8}
+                          y={point.y - 8}
+                          width={displayName.length * 6.5 + 8}
+                          height="16"
+                          rx="3"
+                          fill="var(--bg-1)"
+                          fillOpacity="0.85"
+                          stroke={isSelected ? "var(--accent)" : "var(--border)"}
+                          strokeWidth="0.8"
+                        />
+                        <text 
+                          x={point.x + 12} 
+                          y={point.y + 4} 
+                          fill={isSelected ? "var(--accent)" : isHovered ? "var(--text)" : "var(--text-2)"} 
+                          fontSize={isSelected || isHovered ? "10.5" : "9"} 
+                          fontWeight={isSelected || isHovered ? "800" : "600"}
+                          fontFamily="var(--font-heading)"
+                        >
+                          {displayName}
+                        </text>
+                      </g>
+                    )}
                   </g>
                 )
               })}
@@ -746,16 +921,32 @@ export default function SkillIntelligenceClient({
                   </h3>
                 </div>
                 
-                <Link href={`/concepts/${selectedRadarSkill.slug}`}>
-                  <button style={{
-                    background: 'var(--accent)', color: 'var(--bg-1)', border: 'none',
-                    padding: '8px 16px', borderRadius: '6px', fontSize: '13px', fontWeight: 700,
-                    cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px'
-                  }}>
-                    <BookOpen size={14} />
-                    <span>Full Specifications</span>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+                  <button
+                    onClick={() => toggleLearningPlan(selectedRadarSkill.conceptId, selectedRadarSkill.name)}
+                    style={{
+                      background: learningPlan.includes(selectedRadarSkill.conceptId) ? 'rgba(63, 166, 107, 0.15)' : 'var(--bg-3)',
+                      color: learningPlan.includes(selectedRadarSkill.conceptId) ? 'var(--success)' : 'var(--text)',
+                      border: `1px solid ${learningPlan.includes(selectedRadarSkill.conceptId) ? 'var(--success)' : 'var(--border)'}`,
+                      padding: '8px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: 600,
+                      cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    <span>{learningPlan.includes(selectedRadarSkill.conceptId) ? '✓ In Learning Plan' : '📌 Add to Learning Plan'}</span>
                   </button>
-                </Link>
+
+                  <Link href={`/concepts/${selectedRadarSkill.slug}`}>
+                    <button style={{
+                      background: 'var(--accent)', color: 'var(--bg-1)', border: 'none',
+                      padding: '8px 16px', borderRadius: '6px', fontSize: '13px', fontWeight: 700,
+                      cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px'
+                    }}>
+                      <BookOpen size={14} />
+                      <span>Full Specifications</span>
+                    </button>
+                  </Link>
+                </div>
               </div>
 
               <p style={{ color: 'var(--text-2)', fontSize: '15px', lineHeight: 1.6, marginBottom: '20px' }}>
@@ -1020,6 +1211,67 @@ export default function SkillIntelligenceClient({
             )
           })}
         </div>
+      )}
+
+      {/* Floating Toast Notification */}
+      <AnimatePresence>
+        {planToast && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            style={{
+              position: 'fixed', bottom: '24px', left: '24px', zIndex: 99,
+              background: 'var(--bg-2)', border: '1px solid var(--accent)',
+              color: 'var(--text)', padding: '12px 20px', borderRadius: '30px',
+              fontSize: '13px', fontWeight: 600, fontFamily: 'var(--font-mono)',
+              boxShadow: '0 10px 30px rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', gap: '8px'
+            }}
+          >
+            {planToast}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Floating Learning Plan Sticky Bar */}
+      {learningPlan.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={{
+            position: 'fixed', bottom: '24px', right: '24px', zIndex: 99,
+            background: 'var(--bg-2)', border: '1px solid var(--accent-border)',
+            borderRadius: '16px', padding: '14px 22px', display: 'flex', alignItems: 'center', gap: '16px',
+            boxShadow: '0 12px 40px rgba(0,0,0,0.6)', backdropFilter: 'blur(10px)'
+          }}
+        >
+          <div>
+            <div style={{ fontSize: '10px', color: 'var(--accent)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', fontWeight: 700 }}>
+              📌 Personal Learning Plan
+            </div>
+            <div style={{ fontSize: '14px', fontWeight: 800, color: 'var(--text)', fontFamily: 'var(--font-heading)' }}>
+              {learningPlan.length} Skill{learningPlan.length > 1 ? 's' : ''} Bookmarked
+            </div>
+          </div>
+
+          <button
+            onClick={() => {
+              const selectedNames = skillDirectives
+                .filter(s => learningPlan.includes(s.conceptId))
+                .map(s => `• ${s.name} (${s.urgencyLevel} Priority)\n  Directive: ${s.directive}`)
+                .join('\n\n')
+              navigator.clipboard.writeText(`My CredgeAiVerse Learning Plan:\n\n${selectedNames}`)
+              setPlanToast('Copied Learning Plan to clipboard! 📋')
+            }}
+            style={{
+              background: 'var(--accent)', color: '#000', border: 'none',
+              padding: '8px 16px', borderRadius: '8px', fontSize: '12.5px', fontWeight: 700,
+              cursor: 'pointer', fontFamily: 'var(--font-mono)', display: 'flex', alignItems: 'center', gap: '6px'
+            }}
+          >
+            📋 Copy Plan
+          </button>
+        </motion.div>
       )}
 
       {/* Styled classes rules */}

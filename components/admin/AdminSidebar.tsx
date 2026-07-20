@@ -44,11 +44,11 @@ export default function AdminSidebar() {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <div style={{
-            width: '24px', height: '24px', background: 'var(--accent)', borderRadius: '6px',
+            width: '28px', height: '24px', background: 'var(--accent)', borderRadius: '6px',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '11px', fontWeight: 700, color: '#fff',
-          }}>AV</div>
-          <span style={{ fontWeight: 600, fontSize: '14px' }}>AiVerse Admin</span>
+            fontSize: '10px', fontWeight: 700, color: '#fff',
+          }}>CAV</div>
+          <span style={{ fontWeight: 600, fontSize: '14px' }}>CredgeAiVerse Admin</span>
         </div>
         <button
           onClick={() => setIsOpen(!isOpen)}
@@ -84,12 +84,12 @@ export default function AdminSidebar() {
         {/* Logo */}
         <div style={{ padding: '20px 16px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{
-            width: '30px', height: '30px', background: 'var(--accent)', borderRadius: '7px',
+            width: '32px', height: '30px', background: 'var(--accent)', borderRadius: '7px',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '13px', fontWeight: 700, color: '#fff', letterSpacing: '-0.5px', flexShrink: 0,
-          }}>AV</div>
+            fontSize: '11px', fontWeight: 700, color: '#fff', letterSpacing: '-0.5px', flexShrink: 0,
+          }}>CAV</div>
           <div>
-            <div style={{ fontWeight: 600, fontSize: '14px' }}>AiVerse</div>
+            <div style={{ fontWeight: 600, fontSize: '14px' }}>CredgeAiVerse</div>
             <div style={{ fontSize: '11px', color: 'var(--text-3)' }}>Admin panel</div>
           </div>
         </div>

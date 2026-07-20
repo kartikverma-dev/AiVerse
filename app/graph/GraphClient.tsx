@@ -159,6 +159,36 @@ export default function GraphClient({ nodes, links }: { nodes: Node[]; links: Li
     return filteredNodeIds.has(src) && filteredNodeIds.has(tgt)
   })
 
+  // Lineage Sets calculation for ancestor & descendant tree highlighting
+  const selectedNodeId = selected?.id || null
+  const ancestorIds = new Set<string>()
+  const descendantIds = new Set<string>()
+
+  if (selectedNodeId) {
+    const findAncestors = (nodeId: string) => {
+      links.forEach(l => {
+        const srcId = typeof l.source === 'object' ? (l.source as Node).id : l.source
+        const tgtId = typeof l.target === 'object' ? (l.target as Node).id : l.target
+        if (tgtId === nodeId && !ancestorIds.has(srcId as string)) {
+          ancestorIds.add(srcId as string)
+          findAncestors(srcId as string)
+        }
+      })
+    }
+    const findDescendants = (nodeId: string) => {
+      links.forEach(l => {
+        const srcId = typeof l.source === 'object' ? (l.source as Node).id : l.source
+        const tgtId = typeof l.target === 'object' ? (l.target as Node).id : l.target
+        if (srcId === nodeId && !descendantIds.has(tgtId as string)) {
+          descendantIds.add(tgtId as string)
+          findDescendants(tgtId as string)
+        }
+      })
+    }
+    findAncestors(selectedNodeId)
+    findDescendants(selectedNodeId)
+  }
+
   // 2D force-directed simulation (D3)
   useEffect(() => {
     if (viewMode !== '2d' || !svgRef.current || filteredNodes.length === 0) return
@@ -206,7 +236,29 @@ export default function GraphClient({ nodes, links }: { nodes: Node[]; links: Li
 
     const link = g.append('g').selectAll('line')
       .data(filteredLinks).enter().append('line')
-      .attr('stroke', 'var(--border-strong)').attr('stroke-width', 1.5)
+      .attr('stroke', d => {
+        const srcId = typeof d.source === 'object' ? (d.source as Node).id : d.source
+        const tgtId = typeof d.target === 'object' ? (d.target as Node).id : d.target
+        if (selectedNodeId) {
+          if ((srcId === selectedNodeId || ancestorIds.has(srcId as string)) && (tgtId === selectedNodeId || ancestorIds.has(tgtId as string))) return '#D4AF37'
+          if ((srcId === selectedNodeId || descendantIds.has(srcId as string)) && (tgtId === selectedNodeId || descendantIds.has(tgtId as string))) return '#38bdf8'
+          return 'var(--border)'
+        }
+        return 'var(--border-strong)'
+      })
+      .attr('stroke-width', d => {
+        const srcId = typeof d.source === 'object' ? (d.source as Node).id : d.source
+        const tgtId = typeof d.target === 'object' ? (d.target as Node).id : d.target
+        if (selectedNodeId && (srcId === selectedNodeId || tgtId === selectedNodeId || ancestorIds.has(srcId as string) || descendantIds.has(tgtId as string))) return 2.5
+        return 1.5
+      })
+      .attr('opacity', d => {
+        const srcId = typeof d.source === 'object' ? (d.source as Node).id : d.source
+        const tgtId = typeof d.target === 'object' ? (d.target as Node).id : d.target
+        if (!selectedNodeId) return 0.7
+        const isRelated = srcId === selectedNodeId || tgtId === selectedNodeId || ancestorIds.has(srcId as string) || descendantIds.has(tgtId as string)
+        return isRelated ? 1.0 : 0.1
+      })
       .attr('marker-end', d => {
         const src = typeof d.source === 'object' ? (d.source as Node).status : 'stable'
         return `url(#arrow-${src})`
@@ -215,6 +267,13 @@ export default function GraphClient({ nodes, links }: { nodes: Node[]; links: Li
     const node = g.append('g').selectAll('g')
       .data(filteredNodes).enter().append('g')
       .style('cursor', 'pointer')
+      .attr('opacity', d => {
+        if (!selectedNodeId) return 1.0
+        const isSelected = d.id === selectedNodeId
+        const isAncestor = ancestorIds.has(d.id)
+        const isDescendant = descendantIds.has(d.id)
+        return (isSelected || isAncestor || isDescendant) ? 1.0 : 0.2
+      })
       .call(
         d3.drag<SVGGElement, Node>()
           .on('start', (event, d) => {
@@ -230,17 +289,23 @@ export default function GraphClient({ nodes, links }: { nodes: Node[]; links: Li
       .on('click', (_, d) => setSelected(d))
 
     node.append('circle')
-      .attr('r', 14)
+      .attr('r', d => d.id === selectedNodeId ? 18 : ancestorIds.has(d.id) || descendantIds.has(d.id) ? 16 : 14)
       .attr('fill', d => STATUS_COLOR[d.status] || 'var(--text-3)')
-      .attr('fill-opacity', 0.12)
-      .attr('stroke', d => STATUS_COLOR[d.status] || 'var(--text-3)')
-      .attr('stroke-width', 1.5)
+      .attr('fill-opacity', d => d.id === selectedNodeId ? 0.35 : 0.15)
+      .attr('stroke', d => {
+        if (d.id === selectedNodeId) return '#D4AF37'
+        if (ancestorIds.has(d.id)) return '#D4AF37'
+        if (descendantIds.has(d.id)) return '#38bdf8'
+        return STATUS_COLOR[d.status] || 'var(--text-3)'
+      })
+      .attr('stroke-width', d => d.id === selectedNodeId ? 3 : ancestorIds.has(d.id) || descendantIds.has(d.id) ? 2.5 : 1.5)
 
     node.append('text')
       .attr('dy', 26).attr('text-anchor', 'middle')
-      .attr('fill', 'var(--text-2)').attr('font-size', '9px')
+      .attr('fill', d => d.id === selectedNodeId ? '#D4AF37' : ancestorIds.has(d.id) ? '#D4AF37' : descendantIds.has(d.id) ? '#38bdf8' : 'var(--text-2)')
+      .attr('font-size', '9px')
       .attr('font-family', 'var(--font-mono), monospace')
-      .attr('font-weight', 500)
+      .attr('font-weight', d => d.id === selectedNodeId || ancestorIds.has(d.id) || descendantIds.has(d.id) ? 700 : 500)
       .text(d => d.name.length > 20 ? d.name.slice(0, 18) + '…' : d.name)
 
     simulation.on('tick', () => {
@@ -253,7 +318,7 @@ export default function GraphClient({ nodes, links }: { nodes: Node[]; links: Li
     })
 
     return () => { simulation.stop() }
-  }, [viewMode, filteredNodes, filteredLinks])
+  }, [viewMode, filteredNodes, filteredLinks, selectedNodeId])
 
   // 3D force-directed simulation (WebGL via standard Three.js)
   useEffect(() => {
@@ -643,12 +708,29 @@ export default function GraphClient({ nodes, links }: { nodes: Node[]; links: Li
               cursor: 'pointer', fontSize: '18px', lineHeight: 1,
             }}>×</button>
           </div>
-          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px', fontFamily: 'var(--font-mono)' }}>
+          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '14px', fontFamily: 'var(--font-mono)' }}>
             <span className={`pill pill-${selected.difficulty}`}>{selected.difficulty}</span>
             {selected.categories?.map(c => (
               <span key={c} style={{ fontSize: '11px', color: 'var(--text-3)', background: 'var(--bg-3)', padding: '2px 7px', borderRadius: '4px', border: '1px solid var(--border)' }}>{c}</span>
             ))}
           </div>
+
+          {/* Lineage Tree Counts & Quick Links */}
+          <div style={{
+            background: 'var(--bg-3)', border: '1px solid var(--border)',
+            borderRadius: '8px', padding: '10px 12px', marginBottom: '14px',
+            fontSize: '11px', fontFamily: 'var(--font-mono)'
+          }}>
+            <div style={{ color: '#D4AF37', fontWeight: 600, marginBottom: '4px', display: 'flex', justifyContent: 'space-between' }}>
+              <span>Ancestors (Parents):</span>
+              <span>{ancestorIds.size}</span>
+            </div>
+            <div style={{ color: '#38bdf8', fontWeight: 600, display: 'flex', justifyContent: 'space-between' }}>
+              <span>Descendants (Children):</span>
+              <span>{descendantIds.size}</span>
+            </div>
+          </div>
+
           {selected.slug && (
             <Link href={`/concepts/${selected.slug}`} style={{
               display: 'block', textAlign: 'center', padding: '10px',

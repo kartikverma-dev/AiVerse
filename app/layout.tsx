@@ -6,11 +6,11 @@ import FlashcardModal from '@/components/public/FlashcardModal'
 export const revalidate = 60
 
 export const metadata: Metadata = {
-  title: 'AiVerse — Track the Evolution of AI Ideas',
+  title: 'CredgeAiVerse — Track the Evolution of AI Ideas',
   description: 'A living knowledge graph for the AI ecosystem. Track how terms are born, evolve, and whether they are worth your attention today.',
   keywords: ['AI', 'machine learning', 'knowledge graph', 'AI terminology', 'LLM', 'artificial intelligence'],
   openGraph: {
-    title: 'AiVerse — Track the Evolution of AI Ideas',
+    title: 'CredgeAiVerse — Track the Evolution of AI Ideas',
     description: 'Don\'t chase headlines. Track the evolution of ideas.',
     type: 'website',
   },

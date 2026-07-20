@@ -32,13 +32,13 @@ export default function LoginPage() {
       }}>
         <div style={{ marginBottom: '32px' }}>
           <div style={{
-            width: '36px', height: '36px', background: 'var(--accent)',
+            width: '42px', height: '36px', background: 'var(--accent)',
             borderRadius: '8px', display: 'flex', alignItems: 'center',
-            justifyContent: 'center', fontSize: '13px', fontWeight: 700,
+            justifyContent: 'center', fontSize: '11px', fontWeight: 700,
             color: '#fff', marginBottom: '16px',
-          }}>AV</div>
+          }}>CAV</div>
           <h1 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '6px' }}>Admin login</h1>
-          <p style={{ fontSize: '13px', color: 'var(--text-2)' }}>AiVerse admin access only</p>
+          <p style={{ fontSize: '13px', color: 'var(--text-2)' }}>CredgeAiVerse admin access only</p>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>

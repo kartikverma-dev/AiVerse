@@ -75,12 +75,12 @@ export default function CtaFooter() {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '9px' }}>
             <div style={{
-              width: '26px', height: '26px',
+              width: '32px', height: '26px',
               background: 'linear-gradient(135deg, #818cf8 0%, #6366f1 100%)',
               borderRadius: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: '11px', fontWeight: 700, color: '#fff',
-            }}>AV</div>
-            <span style={{ fontSize: '14px', fontWeight: 700, fontFamily: 'var(--font-heading)' }}>AiVerse</span>
+              fontSize: '10px', fontWeight: 700, color: '#fff',
+            }}>CAV</div>
+            <span style={{ fontSize: '14px', fontWeight: 700, fontFamily: 'var(--font-heading)' }}>CredgeAiVerse</span>
           </div>
 
           <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>

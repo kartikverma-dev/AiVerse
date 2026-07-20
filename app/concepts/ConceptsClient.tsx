@@ -5,9 +5,11 @@ import type { Concept } from '@/types'
 import { parseYear } from '@/lib/yearParser'
 
 const STATUS_FILTERS = ['all', 'emerging', 'growing', 'stable', 'declining', 'historical']
-const CATEGORY_FILTERS = ['All', 'Agents', 'Prompting', 'Training', 'Retrieval', 'Infrastructure', 'Coding']
+const CATEGORY_FILTERS = ['All', 'Agents', 'Prompting', 'Training', 'Retrieval', 'Infrastructure', 'Coding', 'Vision', 'Foundation Models']
 const PRIORITY_FILTERS = ['all', 'learn_now', 'know_basics', 'nice_to_know']
 const PRIORITY_LABELS: Record<string, string> = { all: 'All priorities', learn_now: 'Learn now', know_basics: 'Know basics', nice_to_know: 'Nice to know' }
+const DIFFICULTY_FILTERS = ['all', 'beginner', 'intermediate', 'advanced']
+const DIFFICULTY_LABELS: Record<string, string> = { all: 'All difficulties', beginner: 'Beginner', intermediate: 'Intermediate', advanced: 'Advanced' }
 
 export default function ConceptsClient() {
   const [concepts, setConcepts] = useState<Concept[]>([])
@@ -16,6 +18,7 @@ export default function ConceptsClient() {
   const [status, setStatus] = useState('all')
   const [category, setCategory] = useState('All')
   const [priority, setPriority] = useState('all')
+  const [difficulty, setDifficulty] = useState('all')
   const [selectedYear, setSelectedYear] = useState(2026)
   const [isPlaying, setIsPlaying] = useState(false)
 
@@ -50,17 +53,15 @@ export default function ConceptsClient() {
     setLoading(true)
     try {
       const params = new URLSearchParams()
-      if (search) params.set('q', search)
-      if (status !== 'all') params.set('status', status)
-      if (category !== 'All') params.set('category', category)
-      const res = await fetch(`/api/concepts?${params}`)
+      // Fetch all concepts to allow instant client-side multi-filtering
+      const res = await fetch(`/api/concepts`)
       const data = await res.json()
       setConcepts(data.concepts || [])
     } catch {
       setConcepts([])
     }
     setLoading(false)
-  }, [search, status, category])
+  }, [])
 
   useEffect(() => { load() }, [load])
 
@@ -79,10 +80,35 @@ export default function ConceptsClient() {
     }
   }, [isPlaying])
 
-  const filtered = (priority === 'all'
-    ? concepts
-    : concepts.filter(c => c.learning_priority === priority)
-  ).filter(c => parseYear(c.first_appeared) <= selectedYear)
+  const filtered = concepts.filter(c => {
+    if (priority !== 'all' && c.learning_priority !== priority) return false
+    if (difficulty !== 'all' && c.difficulty !== difficulty) return false
+    if (status !== 'all' && c.status !== status) return false
+    if (category !== 'All' && !c.categories?.includes(category)) return false
+    if (parseYear(c.first_appeared) > selectedYear) return false
+    if (search.trim()) {
+      const q = search.toLowerCase()
+      const nameMatch = c.name?.toLowerCase().includes(q)
+      const abbrMatch = c.abbreviation?.toLowerCase().includes(q)
+      const tldrMatch = c.tldr?.toLowerCase().includes(q)
+      const defMatch = c.definition_beginner?.toLowerCase().includes(q)
+      const catMatch = c.categories?.some(cat => cat.toLowerCase().includes(q))
+      if (!nameMatch && !abbrMatch && !tldrMatch && !defMatch && !catMatch) return false
+    }
+    return true
+  })
+
+  const hasActiveFilters = search !== '' || status !== 'all' || category !== 'All' || priority !== 'all' || difficulty !== 'all' || selectedYear !== 2026
+
+  const resetAllFilters = () => {
+    setSearch('')
+    setStatus('all')
+    setCategory('All')
+    setPriority('all')
+    setDifficulty('all')
+    setSelectedYear(2026)
+    setIsPlaying(false)
+  }
 
   const btn = (active: boolean, label: string, onClick: () => void) => (
     <button key={label} onClick={onClick} style={{
@@ -100,11 +126,11 @@ export default function ConceptsClient() {
       <div style={{ marginBottom: '32px' }}>
         <h1 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800, marginBottom: '10px', fontFamily: 'var(--font-heading)', color: 'var(--text)' }}>Concept library</h1>
         <p style={{ color: 'var(--text-2)', fontSize: '15.5px' }}>
-          {filtered.length} concept{filtered.length !== 1 ? 's' : ''} — every AI term with depth, context, and cited sources.
+          Showing <strong>{filtered.length}</strong> of <strong>{concepts.length}</strong> AI concepts — multi-matrix search & deep technical lineage.
         </p>
       </div>
 
-      {/* Search */}
+      {/* Search Bar */}
       <div style={{ position: 'relative', marginBottom: '20px' }}>
         <svg style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-3)', pointerEvents: 'none' }}
           width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -112,13 +138,19 @@ export default function ConceptsClient() {
         </svg>
         <input
           type="text" value={search} onChange={e => setSearch(e.target.value)}
-          placeholder="Search concepts…"
+          placeholder="Search by term, abbreviation (e.g. RAFT, Self-RAG), description, or tag..."
           style={{
-            width: '100%', padding: '10px 12px 10px 38px',
+            width: '100%', padding: '12px 14px 12px 38px',
             background: 'var(--bg-3)', border: '1px solid var(--border)',
             borderRadius: 'var(--radius)', color: 'var(--text)', fontSize: '14px', outline: 'none',
           }}
         />
+        {search && (
+          <button onClick={() => setSearch('')} style={{
+            position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)',
+            background: 'none', border: 'none', color: 'var(--text-3)', cursor: 'pointer', fontSize: '16px'
+          }}>×</button>
+        )}
       </div>
 
       {/* Timeline Slider */}
@@ -185,16 +217,77 @@ export default function ConceptsClient() {
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="filter-row" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '12px' }}>
-        {STATUS_FILTERS.map(s => btn(status === s, s === 'all' ? 'All status' : s, () => setStatus(s)))}
+      {/* Filters Matrix */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '24px' }}>
+        <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-3)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+          Category Filter
+        </div>
+        <div className="filter-row" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          {CATEGORY_FILTERS.map(c => btn(category === c, c, () => setCategory(c)))}
+        </div>
+
+        <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-3)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.06em', marginTop: '4px' }}>
+          Difficulty & Maturity Status
+        </div>
+        <div className="filter-row" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          {DIFFICULTY_FILTERS.map(d => btn(difficulty === d, DIFFICULTY_LABELS[d], () => setDifficulty(d)))}
+          <span style={{ borderRight: '1px solid var(--border)', margin: '0 4px' }} />
+          {STATUS_FILTERS.map(s => btn(status === s, s === 'all' ? 'All status' : s, () => setStatus(s)))}
+        </div>
+
+        <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-3)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.06em', marginTop: '4px' }}>
+          Learning Priority
+        </div>
+        <div className="filter-row" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          {PRIORITY_FILTERS.map(p => btn(priority === p, PRIORITY_LABELS[p], () => setPriority(p)))}
+        </div>
       </div>
-      <div className="filter-row" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '12px' }}>
-        {CATEGORY_FILTERS.map(c => btn(category === c, c, () => setCategory(c)))}
-      </div>
-      <div className="filter-row" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '32px' }}>
-        {PRIORITY_FILTERS.map(p => btn(priority === p, PRIORITY_LABELS[p], () => setPriority(p)))}
-      </div>
+
+      {/* Active Filter Chips */}
+      {hasActiveFilters && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap',
+          marginBottom: '28px', padding: '10px 14px', background: 'var(--bg-2)',
+          border: '1px solid var(--border)', borderRadius: '8px'
+        }}>
+          <span style={{ fontSize: '11px', color: 'var(--text-3)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>Active filters:</span>
+          {category !== 'All' && (
+            <span style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '4px', background: 'var(--accent-dim)', color: 'var(--accent)', border: '1px solid var(--accent-border)', fontFamily: 'var(--font-mono)' }}>
+              Category: {category}
+            </span>
+          )}
+          {difficulty !== 'all' && (
+            <span style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '4px', background: 'var(--accent-dim)', color: 'var(--accent)', border: '1px solid var(--accent-border)', fontFamily: 'var(--font-mono)' }}>
+              Difficulty: {difficulty}
+            </span>
+          )}
+          {status !== 'all' && (
+            <span style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '4px', background: 'var(--accent-dim)', color: 'var(--accent)', border: '1px solid var(--accent-border)', fontFamily: 'var(--font-mono)' }}>
+              Status: {status}
+            </span>
+          )}
+          {priority !== 'all' && (
+            <span style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '4px', background: 'var(--accent-dim)', color: 'var(--accent)', border: '1px solid var(--accent-border)', fontFamily: 'var(--font-mono)' }}>
+              Priority: {PRIORITY_LABELS[priority]}
+            </span>
+          )}
+          {selectedYear !== 2026 && (
+            <span style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '4px', background: 'var(--accent-dim)', color: 'var(--accent)', border: '1px solid var(--accent-border)', fontFamily: 'var(--font-mono)' }}>
+              Year ≤ {selectedYear}
+            </span>
+          )}
+          <button
+            onClick={resetAllFilters}
+            style={{
+              marginLeft: 'auto', background: 'none', border: 'none',
+              color: 'var(--accent)', fontSize: '11px', fontWeight: 600,
+              cursor: 'pointer', fontFamily: 'var(--font-mono)', textTransform: 'uppercase'
+            }}
+          >
+            Reset all
+          </button>
+        </div>
+      )}
 
       {loading ? (
         <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-2)' }}>

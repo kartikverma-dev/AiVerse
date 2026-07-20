@@ -2,9 +2,11 @@ import { notFound } from 'next/navigation'
 import Nav from '@/components/ui/Nav'
 import { getConceptBySlug, getConcepts } from '@/lib/db'
 import { getStrategicInsights } from '@/lib/strategic-insights'
+import ConceptQuiz from '@/components/public/ConceptQuiz'
 import Link from 'next/link'
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 const statusEmoji: Record<string, string> = {
   emerging: '🌱', growing: '📈', stable: '✅', declining: '📉', historical: '📦'
@@ -267,6 +269,9 @@ export default async function ConceptPage({ params }: { params: Promise<{ slug: 
               </div>
             </section>
           )}
+
+          {/* Knowledge Check Micro-Quiz */}
+          <ConceptQuiz concept={concept} />
 
           {/* Sources */}
           {concept.sources && concept.sources.length > 0 && (
