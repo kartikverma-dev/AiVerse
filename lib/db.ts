@@ -1,5 +1,18 @@
-import { createServiceClient } from './supabase/server'
+import { createClient, createServiceClient } from './supabase/server'
 import type { Concept, DigestEntry } from '@/types'
+
+async function getAuthenticatedDbClient() {
+  try {
+    const client = await createClient()
+    const { data: { user } } = await client.auth.getUser()
+    if (user) {
+      return createServiceClient()
+    }
+    return client
+  } catch {
+    return createServiceClient()
+  }
+}
 
 export async function getConcepts(options?: {
   status?: string
@@ -8,7 +21,7 @@ export async function getConcepts(options?: {
   limit?: number
   search?: string
 }): Promise<Concept[]> {
-  const db = createServiceClient()
+  const db = await getAuthenticatedDbClient()
   let query = db
     .from('concepts')
     .select('*, sources(*), examples(*)')
@@ -25,7 +38,7 @@ export async function getConcepts(options?: {
 }
 
 export async function getConceptBySlug(slug: string): Promise<Concept | null> {
-  const db = createServiceClient()
+  const db = await getAuthenticatedDbClient()
   const { data, error } = await db
     .from('concepts')
     .select(`
@@ -50,7 +63,7 @@ export async function getEvolutionChain(): Promise<Array<{
   parent: { id: string; name: string; status: string }
   child: { id: string; name: string; status: string }
 }>> {
-  const db = createServiceClient()
+  const db = await getAuthenticatedDbClient()
   const { data, error } = await db
     .from('concept_evolutions')
     .select(`
@@ -64,7 +77,7 @@ export async function getEvolutionChain(): Promise<Array<{
 }
 
 export async function getDigestEntries(weekOf?: string): Promise<DigestEntry[]> {
-  const db = createServiceClient()
+  const db = await getAuthenticatedDbClient()
   let query = db
     .from('digest_entries')
     .select('*, concept:concepts(id, name, slug, status)')

@@ -3,7 +3,8 @@ import Nav from '@/components/ui/Nav'
 import { getConcepts, getDigestEntries } from '@/lib/db'
 import StrategyBoardClient from '@/components/public/StrategyBoardClient'
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 async function StrategyData() {
   let concepts: any[] = []

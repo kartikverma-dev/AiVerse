@@ -113,30 +113,14 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
             backdropFilter: 'blur(8px)',
           }}>
             <span style={{ 
-              position: 'relative',
-              display: 'flex', 
+              display: 'inline-block', 
               width: '7px', 
-              height: '7px' 
-            }}>
-              <span style={{
-                position: 'absolute',
-                display: 'inline-flex',
-                height: '100%',
-                width: '100%',
-                borderRadius: '50%',
-                backgroundColor: 'var(--success)',
-                opacity: 0.75,
-                animation: 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite',
-              }} />
-              <span style={{
-                position: 'relative',
-                display: 'inline-flex',
-                borderRadius: '50%',
-                height: '7px',
-                width: '7px',
-                backgroundColor: 'var(--success)',
-              }} />
-            </span>
+              height: '7px',
+              borderRadius: '50%',
+              backgroundColor: 'var(--success)',
+              boxShadow: '0 0 8px var(--success)',
+              flexShrink: 0,
+            }} />
             <span style={{ fontSize: '11px', color: 'var(--accent)', fontWeight: 600, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>
               {totalCount} AI concepts tracked · archive active
             </span>
@@ -386,12 +370,7 @@ export default function HeroSection({ totalCount }: { totalCount: number }) {
             stroke-dashoffset: -20;
           }
         }
-        @keyframes ping {
-          75%, 100% {
-            transform: scale(2);
-            opacity: 0;
-          }
-        }
+
         @media (max-width: 768px) {
           .hero-dashboard-grid {
             display: flex !important;

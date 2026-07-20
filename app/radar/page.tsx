@@ -3,7 +3,8 @@ import Nav from '@/components/ui/Nav'
 import { getDigestEntries, getConcepts } from '@/lib/db'
 import SkillIntelligenceClient from '@/components/public/SkillIntelligenceClient'
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 async function SkillRadarData() {
   let entries: Awaited<ReturnType<typeof getDigestEntries>> = []

@@ -8,7 +8,8 @@ import FeatureBento from '@/components/public/FeatureBento'
 import CareerIntelligenceHome from '@/components/public/CareerIntelligenceHome'
 import CtaFooter from '@/components/public/CtaFooter'
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 const statusColor: Record<string, string> = {
   emerging: 'var(--emerging)',

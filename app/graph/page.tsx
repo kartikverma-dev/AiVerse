@@ -2,7 +2,8 @@ import Nav from '@/components/ui/Nav'
 import GraphClient from './GraphClient'
 import { getConcepts, getEvolutionChain } from '@/lib/db'
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 export default async function GraphPage() {
   let nodes: Array<{ id: string; name: string; status: string; difficulty: string; categories: string[] }> = []

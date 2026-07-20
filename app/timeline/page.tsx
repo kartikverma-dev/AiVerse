@@ -2,7 +2,8 @@ import Nav from '@/components/ui/Nav'
 import { getEvolutionChain, getConcepts } from '@/lib/db'
 import Link from 'next/link'
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 const statusColor: Record<string, string> = {
   emerging: 'var(--emerging)', growing: 'var(--growing)',
